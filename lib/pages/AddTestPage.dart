@@ -1,5 +1,6 @@
 import 'package:datz_flutter/components/Buttons.dart';
-import 'package:datz_flutter/model/model.dart';
+import 'package:datz_flutter/model/ClassModel.dart';
+import 'package:datz_flutter/model/TestModel.dart';
 import 'package:datz_flutter/providers/ClassProvider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';

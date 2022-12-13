@@ -1,14 +1,34 @@
-import 'package:datz_flutter/model/model.dart';
+import 'package:datz_flutter/model/DataLoader.dart';
+import 'package:datz_flutter/model/SubjectModel.dart';
+import 'package:datz_flutter/model/data.dart';
+import 'package:datz_flutter/model/ClassModel.dart';
 import 'package:flutter/cupertino.dart';
 
-class ClassProvider extends ChangeNotifier {
+import '../model/SemesterModel.dart';
+import '../model/TestModel.dart';
+
+class ClassProvider with ChangeNotifier {
   Class? selectedClass;
   int selectedSemester;
 
   /// must be the id of a simpleSubject
   int? selectedSubjectId;
 
-  ClassProvider({this.selectedClass, this.selectedSemester = 0});
+  @override
+  void notifyListeners() {
+    if (selectedClass != null) DataLoader.saveClass(selectedClass!);
+    super.notifyListeners();
+  }
+
+  void loadCurrentClass() async {
+    Class? loadedClass = await DataLoader.loadCurrentClass();
+    selectedClass = loadedClass;
+    notifyListeners();
+  }
+
+  ClassProvider({this.selectedClass, this.selectedSemester = 0}) {
+    loadCurrentClass();
+  }
 
   void selectSemester(int sem) {
     selectedSemester = sem;
@@ -40,13 +60,16 @@ class ClassProvider extends ChangeNotifier {
     return null;
   }
 
+  /// is true if the global avg over all semesters is selected
+  /// selectedClass == null, false is returned
   bool isDisplayingTotalAvg() {
-    return selectedSemester >= selectedClass.semesters.length;
+    if (selectedClass == null) return false;
+    return selectedSemester >= selectedClass!.semesters.length;
   }
 
   Semester? getSelectedSemester() {
-    if (isDisplayingTotalAvg()) return null;
-    return selectedClass.semesters[selectedSemester];
+    if (selectedClass == null || isDisplayingTotalAvg()) return null;
+    return selectedClass!.semesters[selectedSemester];
   }
 
   void incrementBonusPoints() {

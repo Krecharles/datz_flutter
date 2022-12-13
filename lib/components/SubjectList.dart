@@ -1,7 +1,9 @@
 import 'package:datz_flutter/components/SlidableListView.dart';
+import 'package:datz_flutter/model/SemesterModel.dart';
+import 'package:datz_flutter/model/SubjectModel.dart';
 import 'package:datz_flutter/pages/SubjectDetailPage.dart';
 import 'package:datz_flutter/providers/ClassProvider.dart';
-import 'package:datz_flutter/model/model.dart';
+import 'package:datz_flutter/model/ClassModel.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 
@@ -12,7 +14,8 @@ class SubjectList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<ClassProvider>(
         builder: (BuildContext context, ClassProvider provider, Widget? child) {
-      if (provider.isDisplayingTotalAvg()) return Text("Todo");
+      if (provider.selectedClass == null) return const Text("Loading");
+      if (provider.isDisplayingTotalAvg()) return const Text("Todo");
 
       Semester sem = provider.getSelectedSemester()!;
 

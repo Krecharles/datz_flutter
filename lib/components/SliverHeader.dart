@@ -1,6 +1,5 @@
 import 'package:datz_flutter/consts.dart';
 import 'package:datz_flutter/providers/ClassProvider.dart';
-import 'package:datz_flutter/model/Model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -45,8 +44,10 @@ class SliverHeader extends StatelessWidget {
             opacity: opacity,
             child: Consumer<ClassProvider>(builder:
                 (BuildContext context, ClassProvider provider, Widget? child) {
+              if (provider.selectedClass == null) return Container();
+
               List<String> semesterNames =
-                  provider.selectedClass.getSemesterNames();
+                  provider.selectedClass!.getSemesterNames();
               Map<int, Widget> options = {};
               for (int i = 0; i < semesterNames.length; i++) {
                 options[i] = Text(
@@ -73,8 +74,9 @@ class SliverHeader extends StatelessWidget {
   }
 
   String calcMainHeaderNumber(ClassProvider provider) {
+    if (provider.selectedClass == null) return "";
     if (provider.isDisplayingTotalAvg()) {
-      return provider.selectedClass.formattedAvg();
+      return provider.selectedClass!.formattedAvg();
     }
     return provider.getSelectedSemester()?.formattedAvg() ?? "";
   }

@@ -1,31 +1,26 @@
 import 'package:datz_flutter/components/SlidableListView.dart';
+import 'package:datz_flutter/model/DataLoader.dart';
+import 'package:datz_flutter/model/data.dart';
 import 'package:datz_flutter/model/legacyDataLoader.dart';
-import 'package:datz_flutter/model/model.dart';
+import 'package:datz_flutter/model/ClassModel.dart';
 import 'package:datz_flutter/pages/HomePage.dart';
 import 'package:datz_flutter/providers/ClassProvider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
-class MyApp extends StatefulWidget {
-  const MyApp({Key? key}) : super(key: key);
-
-  @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  Class? _selectedClass;
-
+class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    LegacyDataLoader.checkPreferences();
+    // LegacyDataLoader.checkPreferences();
+
+    // DataLoader.saveClass(myClass);
 
     return ChangeNotifierProvider<ClassProvider>(
-      create: (_) => ClassProvider(selectedClass: _selectedClass),
+      create: (_) => ClassProvider(),
       child: ChangeNotifierProvider<SlidableListProvider>(
         create: (_) => SlidableListProvider(),
         child: const CupertinoApp(
