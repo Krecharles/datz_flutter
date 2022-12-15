@@ -1,5 +1,4 @@
 import 'package:datz_flutter/components/Buttons.dart';
-import 'package:datz_flutter/model/ClassModel.dart';
 import 'package:datz_flutter/model/TestModel.dart';
 import 'package:datz_flutter/providers/ClassProvider.dart';
 import 'package:flutter/cupertino.dart';
@@ -76,7 +75,7 @@ class _AddTestPageState extends State<AddTestPage> {
               CupertinoListSection.insetGrouped(
                 children: [
                   CupertinoListTile.notched(
-                    title: Text("Name"),
+                    title: const Text("Name"),
                     trailing: SizedBox(
                       width: 128,
                       child: CupertinoTextField(
@@ -86,7 +85,7 @@ class _AddTestPageState extends State<AddTestPage> {
                     ),
                   ),
                   CupertinoListTile.notched(
-                    title: Text("Grade"),
+                    title: const Text("Grade"),
                     trailing: SizedBox(
                       width: 64,
                       child: CupertinoTextField(
@@ -100,7 +99,7 @@ class _AddTestPageState extends State<AddTestPage> {
                     ),
                   ),
                   CupertinoListTile.notched(
-                    title: Text("Max Grade"),
+                    title: const Text("Max Grade"),
                     trailing: SizedBox(
                       width: 64,
                       child: CupertinoTextField(

@@ -129,18 +129,19 @@ class SubjectDetailPage extends StatelessWidget {
     if (provider.getSelectedSubject()!.tests.isEmpty) {
       return const Text("no tests");
     }
-    return SlidableListView(
-      children: [
-        for (Test t in provider.getSelectedSubject()!.tests)
-          CupertinoListTile.notched(
-            title: Text(t.name),
-            trailing: Text(
-              "${t.grade} / ${t.maxGrade}",
-              style: TextStyle(
-                  color: CupertinoColors.secondaryLabel.resolveFrom(context)),
-            ),
-          ),
-      ],
+    return SlidableListView<Test>(
+      childrenDataList: provider.getSelectedSubject()!.tests,
+      // onDelete: (BuildContext context, Test test) {
+      //   print(test);
+      // },
+      childBuilder: (BuildContext context, Test t) => CupertinoListTile.notched(
+        title: Text(t.name),
+        trailing: Text(
+          "${t.grade} / ${t.maxGrade}",
+          style: TextStyle(
+              color: CupertinoColors.secondaryLabel.resolveFrom(context)),
+        ),
+      ),
     );
   }
 
@@ -164,7 +165,7 @@ class SubjectDetailPage extends StatelessWidget {
                 fontWeight: FontWeight.w700,
               ),
             ),
-            SizedBox(height: 12),
+            const SizedBox(height: 12),
             Text(
               "Coefficient: ${provider.getSelectedSubject()?.coef ?? ""}",
               style: TextStyle(
