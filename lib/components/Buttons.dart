@@ -8,6 +8,7 @@ class Button extends StatelessWidget {
   final IconData? leadingIcon;
   final VoidCallback? onPressed;
   final EdgeInsets padding;
+  final CupertinoDynamicColor color;
 
   const Button({
     super.key,
@@ -16,6 +17,7 @@ class Button extends StatelessWidget {
     this.leadingIcon,
     this.onPressed,
     this.padding = const EdgeInsets.symmetric(horizontal: 20, vertical: 13),
+    this.color = CupertinoColors.systemBlue,
   });
 
   @override
@@ -23,7 +25,7 @@ class Button extends StatelessWidget {
     switch (type) {
       case ButtonType.filled:
         return CupertinoButton(
-          color: CupertinoColors.activeBlue,
+          color: color,
           onPressed: onPressed,
           padding: padding,
           borderRadius: BorderRadius.circular(10),
@@ -45,7 +47,7 @@ class Button extends StatelessWidget {
         );
       case ButtonType.tinted:
         return CupertinoButton(
-          color: CupertinoColors.activeBlue.withOpacity(0.15),
+          color: color.withOpacity(0.15),
           onPressed: onPressed,
           padding: padding,
           borderRadius: BorderRadius.circular(10),
@@ -57,20 +59,18 @@ class Button extends StatelessWidget {
                   size: 20,
                   color: CupertinoColors.systemBlue,
                 ),
-                SizedBox(width: 10),
+                const SizedBox(width: 10),
               ],
               Text(
                 text,
-                style: const TextStyle(
-                    fontWeight: FontWeight.w600,
-                    color: CupertinoColors.systemBlue),
+                style: TextStyle(fontWeight: FontWeight.w600, color: color),
               ),
             ],
           ),
         );
       case ButtonType.plain:
         return CupertinoButton(
-          color: CupertinoColors.activeBlue.withOpacity(0),
+          color: color.withOpacity(0),
           onPressed: onPressed,
           padding: padding,
           borderRadius: BorderRadius.circular(10),
@@ -80,15 +80,13 @@ class Button extends StatelessWidget {
                 Icon(
                   leadingIcon!,
                   size: 20,
-                  color: CupertinoColors.systemBlue,
+                  color: color,
                 ),
-                SizedBox(width: 10),
+                const SizedBox(width: 10),
               ],
               Text(
                 text,
-                style: const TextStyle(
-                    fontWeight: FontWeight.w600,
-                    color: CupertinoColors.systemBlue),
+                style: TextStyle(fontWeight: FontWeight.w600, color: color),
               ),
             ],
           ),
@@ -106,15 +104,13 @@ class Button extends StatelessWidget {
                 Icon(
                   leadingIcon!,
                   size: 20,
-                  color: CupertinoColors.systemBlue,
+                  color: color,
                 ),
-                SizedBox(width: 10),
+                const SizedBox(width: 10),
               ],
               Text(
                 text,
-                style: const TextStyle(
-                    fontWeight: FontWeight.w600,
-                    color: CupertinoColors.systemBlue),
+                style: TextStyle(fontWeight: FontWeight.w600, color: color),
               ),
             ],
           ),

@@ -1,10 +1,8 @@
 import 'package:datz_flutter/components/Buttons.dart';
 import 'package:datz_flutter/components/CustomeSliver.dart';
-import 'package:datz_flutter/components/SlidableListView.dart';
 import 'package:datz_flutter/components/SliverHeader.dart';
 import 'package:datz_flutter/components/SubjectList.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:provider/provider.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -25,20 +23,19 @@ class HomePage extends StatelessWidget {
   Widget buildBody() {
     return Column(
       children: <Widget>[
-        SubjectList(),
+        const SubjectList(),
         const SizedBox(height: 64),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Consumer<SlidableListProvider>(builder: (BuildContext context,
-                SlidableListProvider provider, Widget? child) {
-              return Button(
-                text: provider.isInEditMode ? "Finish" : "Edit Class",
-                leadingIcon: CupertinoIcons.pen,
-                type: ButtonType.tinted,
-                onPressed: provider.toggleEditMode,
-              );
-            }),
+            Button(
+              text: "Edit Class",
+              leadingIcon: CupertinoIcons.pen,
+              type: ButtonType.tinted,
+              onPressed: () {
+                print("TODO edit class");
+              },
+            ),
             // Button(
             //   text: "more",
             //   type: ButtonType.plain,

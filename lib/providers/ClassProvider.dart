@@ -89,4 +89,23 @@ class ClassProvider with ChangeNotifier {
     getSelectedSubject()!.tests.add(newTest);
     notifyListeners();
   }
+
+  void editTest(Test editedTest) {
+    if (getSelectedSubject() == null) return;
+
+    final oldTest = getSelectedSubject()!
+        .tests
+        .firstWhere((Test t) => t.id == editedTest.id);
+
+    oldTest.name = editedTest.name;
+    oldTest.grade = editedTest.grade;
+    oldTest.maxGrade = editedTest.maxGrade;
+    notifyListeners();
+  }
+
+  void deleteTest(int testId) {
+    if (getSelectedSubject() == null) return;
+    getSelectedSubject()!.tests.removeWhere((Test t) => t.id == testId);
+    notifyListeners();
+  }
 }

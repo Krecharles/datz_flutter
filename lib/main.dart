@@ -21,16 +21,13 @@ class MyApp extends StatelessWidget {
 
     return ChangeNotifierProvider<ClassProvider>(
       create: (_) => ClassProvider(),
-      child: ChangeNotifierProvider<SlidableListProvider>(
-        create: (_) => SlidableListProvider(),
-        child: const CupertinoApp(
-          title: 'Datz!',
-          debugShowCheckedModeBanner: false,
-          theme: CupertinoThemeData(
-            scaffoldBackgroundColor: CupertinoColors.systemGroupedBackground,
-          ),
-          home: HomePage(),
+      child: const CupertinoApp(
+        title: 'Datz!',
+        debugShowCheckedModeBanner: false,
+        theme: CupertinoThemeData(
+          scaffoldBackgroundColor: CupertinoColors.systemGroupedBackground,
         ),
+        home: HomePage(),
       ),
     );
   }

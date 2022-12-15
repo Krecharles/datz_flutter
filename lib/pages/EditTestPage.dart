@@ -4,22 +4,38 @@ import 'package:datz_flutter/providers/ClassProvider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 
-class AddTestPage extends StatefulWidget {
-  const AddTestPage({super.key});
+class TestEditPage extends StatefulWidget {
+  /// indicates if it is a new test or modifying an existing one
+  final Test? editTest;
+  final void Function(Test) onSubmit;
+
+  const TestEditPage({
+    super.key,
+    this.editTest,
+    required this.onSubmit,
+  });
 
   @override
-  State<AddTestPage> createState() => _AddTestPageState();
+  State<TestEditPage> createState() => _TestEditPageState();
 }
 
-class _AddTestPageState extends State<AddTestPage> {
-  final TextEditingController _nameController =
-      TextEditingController(text: "Test");
-  final TextEditingController _gradeController = TextEditingController();
-  final TextEditingController _maxGradeController =
-      TextEditingController(text: "60");
+class _TestEditPageState extends State<TestEditPage> {
+  TextEditingController _nameController = TextEditingController();
+  TextEditingController _gradeController = TextEditingController();
+  TextEditingController _maxGradeController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _nameController =
+        TextEditingController(text: widget.editTest?.name ?? "Test");
+    _gradeController =
+        TextEditingController(text: widget.editTest?.grade.toString());
+    _maxGradeController =
+        TextEditingController(text: "${widget.editTest?.maxGrade ?? 60}");
+  }
 
   void onSubmit() {
-    print(_nameController.value.text);
     if (_nameController.value.text == "") {
       return alertError("Name cannot be Empty.");
     }
@@ -30,11 +46,14 @@ class _AddTestPageState extends State<AddTestPage> {
       return alertError("Max Grade must be a Number");
     }
     Test newTest = Test(
+      id: widget.editTest?.id,
       name: _nameController.value.text,
       grade: double.parse(_gradeController.value.text),
       maxGrade: double.parse(_maxGradeController.value.text),
     );
-    addTest(newTest);
+    widget.onSubmit(newTest);
+    Navigator.pop(context);
+    // addTest(newTest);
   }
 
   void addTest(Test newTest) {
@@ -64,9 +83,9 @@ class _AddTestPageState extends State<AddTestPage> {
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
-      navigationBar: const CupertinoNavigationBar(
+      navigationBar: CupertinoNavigationBar(
         previousPageTitle: "Back",
-        middle: Text("Add Test"),
+        middle: Text(widget.editTest == null ? "Add Test" : "Edit Test"),
       ),
       child: SingleChildScrollView(
         child: SafeArea(
@@ -118,10 +137,24 @@ class _AddTestPageState extends State<AddTestPage> {
                 children: [
                   Button(
                     type: ButtonType.filled,
-                    text: "Add",
+                    text: widget.editTest == null ? "Add" : "Save",
                     onPressed: onSubmit,
-                    leadingIcon: CupertinoIcons.add,
+                    // leadingIcon: CupertinoIcons.add,
                   ),
+                  if (widget.editTest != null) ...[
+                    const SizedBox(width: 4),
+                    Button(
+                      type: ButtonType.plain,
+                      color: CupertinoColors.systemRed,
+                      text: "Delete",
+                      onPressed: () {
+                        Provider.of<ClassProvider>(context, listen: false)
+                            .deleteTest(widget.editTest!.id);
+                        Navigator.pop(context);
+                      },
+                      // leadingIcon: CupertinoIcons.trash,
+                    ),
+                  ]
                 ],
               ),
               // CupertinoTextField(),

@@ -55,7 +55,7 @@ class SimpleSubjectListTile extends StatelessWidget {
               Navigator.push(
                 context,
                 CupertinoPageRoute(
-                  builder: ((context) => SubjectDetailPage()),
+                  builder: ((context) => const SubjectDetailPage()),
                 ),
               ).then((_) => provider.unSelectSubject());
             },
