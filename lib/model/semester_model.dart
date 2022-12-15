@@ -1,3 +1,4 @@
+import 'package:datz_flutter/model/class_meta_model.dart';
 import 'package:datz_flutter/model/class_model.dart';
 import 'package:datz_flutter/model/subject_model.dart';
 import 'package:flutter/foundation.dart';
@@ -14,6 +15,24 @@ class Semester {
       required this.subjects,
       int? id}) {
     this.id = id ?? randomId();
+  }
+
+  Semester.fromMetaModel(
+      ClassMetaModel classMetaModel, SemesterMetaModel semesterMetaModel) {
+    name = semesterMetaModel.name;
+    coef = semesterMetaModel.coef;
+    id = randomId();
+
+    subjects = [];
+    for (SubjectMetaModel subjectMetaModel in classMetaModel.subjects) {
+      if (subjectMetaModel.subSubjects.isEmpty) {
+        Subject s = SimpleSubject.fromMetaModel(subjectMetaModel);
+        subjects.add(s);
+      } else {
+        Subject s = CombiSubject.fromMetaModel(subjectMetaModel);
+        subjects.add(s);
+      }
+    }
   }
 
   Semester.fromJson(Map<String, dynamic> json) {

@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:datz_flutter/model/class_meta_model.dart';
 import 'package:datz_flutter/model/semester_model.dart';
 import 'package:flutter/foundation.dart';
 
@@ -13,6 +14,16 @@ class Class {
 
   Class({required this.name, required this.semesters, int? id}) {
     this.id = id ?? randomId();
+  }
+
+  Class.fromMetaModel(ClassMetaModel classMetaModel) {
+    name = classMetaModel.name;
+    id = randomId();
+    semesters = [];
+    for (SemesterMetaModel semesterMetaModel in classMetaModel.semesters) {
+      Semester s = Semester.fromMetaModel(classMetaModel, semesterMetaModel);
+      semesters.add(s);
+    }
   }
 
   /// This method throws an error if something didn't parse correctly or if the

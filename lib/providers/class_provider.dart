@@ -13,6 +13,10 @@ class ClassProvider with ChangeNotifier {
   /// must be the id of a simpleSubject
   int? selectedSubjectId;
 
+  ClassProvider({this.selectedClass, this.selectedSemester = 0}) {
+    loadCurrentClass();
+  }
+
   @override
   void notifyListeners() {
     if (selectedClass != null) DataLoader.saveClass(selectedClass!);
@@ -25,8 +29,11 @@ class ClassProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  ClassProvider({this.selectedClass, this.selectedSemester = 0}) {
-    loadCurrentClass();
+  void selectClass(Class c) {
+    selectedClass = c;
+    selectedSemester = 0;
+    selectedSubjectId = null;
+    notifyListeners();
   }
 
   void selectSemester(int sem) {

@@ -31,7 +31,7 @@ class CustomSliver extends StatelessWidget {
         ),
         // This widget fills the remaining space in the viewport.
         // Drag the scrollable area to collapse the CupertinoSliverNavigationBar.
-        SliverFillRemaining(child: body)
+        SliverFillRemaining(hasScrollBody: false, child: body)
       ],
     );
   }

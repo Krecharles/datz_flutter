@@ -68,7 +68,6 @@ class DataLoader {
       for (Map<String, dynamic> classData in data) {
         allClassMetaModels.add(ClassMetaModel.fromJson(classData));
       }
-      print(allClassMetaModels);
       return allClassMetaModels;
     } catch (e) {
       if (kDebugMode) {
@@ -76,5 +75,53 @@ class DataLoader {
       }
       rethrow;
     }
+  }
+
+  /// loads the ids of all the classes the users has created
+  static Future<List<int>> loadAllClassIds() async {
+    final userDefaults = await SharedPreferences.getInstance();
+    final List<String>? classData = userDefaults.getStringList("allClassIds");
+    if (classData == null) return [];
+    List<int> out = [];
+    for (final s in classData) {
+      final id = int.tryParse(s);
+      if (id != null) {
+        out.add(id);
+      } else if (kDebugMode) {
+        print("Could not parse id $id");
+      }
+    }
+    return out;
+  }
+
+  /// adds a new class id to the users created classes. If the id already exists
+  /// nothing will happen
+  static void addClassId(int newClassId) async {
+    final userDefaults = await SharedPreferences.getInstance();
+    final allIds = await loadAllClassIds();
+    if (allIds.contains(newClassId)) return;
+    allIds.add(newClassId);
+    userDefaults.setStringList("allClassIds", allIds.map((e) => "$e").toList());
+  }
+
+  /// removes a  class id from the users created classes. If the id does not
+  /// exist nothing will happen
+  static void removeClassId(int classId) async {
+    final userDefaults = await SharedPreferences.getInstance();
+    final allIds = await loadAllClassIds();
+    if (!allIds.contains(classId)) return;
+    allIds.remove(classId);
+    userDefaults.setStringList("allClassIds", allIds.map((e) => "$e").toList());
+  }
+
+  static Future<List<Class>> loadAllClasses() async {
+    final allIds = await loadAllClassIds();
+    List<Class> allClasses = [];
+    for (final id in allIds) {
+      Class? c = await loadClass(id);
+      if (c != null) allClasses.add(c);
+    }
+
+    return allClasses;
   }
 }

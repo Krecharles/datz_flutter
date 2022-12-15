@@ -1,5 +1,5 @@
 import 'package:datz_flutter/model/data_loader.dart';
-import 'package:datz_flutter/pages/home_page.dart';
+import 'package:datz_flutter/pages/home_page/home_page.dart';
 import 'package:datz_flutter/providers/class_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';

@@ -41,6 +41,7 @@ class SubjectMetaModel {
       name = json["name"];
       coef = json["coef"];
       final subSubjectsList = json["subSubjects"] as List<dynamic>?;
+      subSubjects = [];
       if (subSubjectsList != null) {
         subSubjects =
             subSubjectsList.map((s) => SubjectMetaModel.fromJson(s)).toList();

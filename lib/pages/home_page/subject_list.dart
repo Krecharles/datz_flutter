@@ -1,6 +1,6 @@
 import 'package:datz_flutter/model/semester_model.dart';
 import 'package:datz_flutter/model/subject_model.dart';
-import 'package:datz_flutter/pages/subject_detail_page.dart';
+import 'package:datz_flutter/pages/subject_detail_page/subject_detail_page.dart';
 import 'package:datz_flutter/providers/class_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
@@ -44,6 +44,7 @@ class SimpleSubjectListTile extends StatelessWidget {
     return Consumer<ClassProvider>(
         builder: (BuildContext context, ClassProvider provider, Widget? child) {
       return CupertinoListSection.insetGrouped(
+        margin: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
         children: [
           CupertinoListTile.notched(
             title: Text(

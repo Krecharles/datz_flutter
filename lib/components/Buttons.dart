@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 enum ButtonType { filled, tinted, gray, plain }
 
@@ -15,7 +16,7 @@ class Button extends StatelessWidget {
     required this.text,
     this.type = ButtonType.filled,
     this.leadingIcon,
-    this.onPressed,
+    required this.onPressed,
     this.padding = const EdgeInsets.symmetric(horizontal: 20, vertical: 13),
     this.color = CupertinoColors.systemBlue,
   });
@@ -70,7 +71,7 @@ class Button extends StatelessWidget {
         );
       case ButtonType.plain:
         return CupertinoButton(
-          color: color.withOpacity(0),
+          color: Colors.transparent,
           onPressed: onPressed,
           padding: padding,
           borderRadius: BorderRadius.circular(10),

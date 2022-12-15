@@ -1,3 +1,4 @@
+import 'package:datz_flutter/model/class_meta_model.dart';
 import 'package:datz_flutter/model/class_model.dart';
 import 'package:datz_flutter/model/test_model.dart';
 import 'package:flutter/foundation.dart';
@@ -47,6 +48,13 @@ class SimpleSubject extends Subject {
     this.fixedContributionTests = const [],
     int? id,
   }) : super(id: id);
+
+  SimpleSubject.fromMetaModel(SubjectMetaModel subjectMetaModel)
+      : super(name: subjectMetaModel.name, coef: subjectMetaModel.coef) {
+    tests = [];
+    fixedContributionTests = [];
+    plusPoints = 0;
+  }
 
   SimpleSubject.fromJson(Map<String, dynamic> json) : super(name: "", coef: 0) {
     try {
@@ -122,6 +130,20 @@ class CombiSubject extends Subject {
       required this.subSubjects,
       int? id})
       : super(id: id);
+
+  CombiSubject.fromMetaModel(SubjectMetaModel subjectMetaModel)
+      : super(name: subjectMetaModel.name, coef: subjectMetaModel.coef) {
+    for (SubjectMetaModel subModels in subjectMetaModel.subSubjects) {
+      if (subModels.subSubjects.isNotEmpty) {
+        if (kDebugMode) {
+          print("Multiple nested subSubjects not allowed");
+        }
+      } else {
+        subSubjects = [];
+        subSubjects.add(SimpleSubject.fromMetaModel(subModels));
+      }
+    }
+  }
 
   CombiSubject.fromJson(Map<String, dynamic> json) : super(name: "", coef: 0) {
     try {
