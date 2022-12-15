@@ -1,7 +1,9 @@
 import 'package:datz_flutter/components/Buttons.dart';
+import 'package:datz_flutter/consts.dart';
 import 'package:datz_flutter/model/TestModel.dart';
 import 'package:datz_flutter/providers/ClassProvider.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class TestEditPage extends StatefulWidget {
@@ -84,8 +86,12 @@ class _TestEditPageState extends State<TestEditPage> {
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
+        // backgroundColor: CustomColors.color2,
         previousPageTitle: "Back",
-        middle: Text(widget.editTest == null ? "Add Test" : "Edit Test"),
+        middle: Text(
+          widget.editTest == null ? "Add Test" : "Edit Test",
+          // style: TextStyle(color: Colors.white),
+        ),
       ),
       child: SingleChildScrollView(
         child: SafeArea(

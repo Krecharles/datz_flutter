@@ -23,7 +23,7 @@ class SubjectDetailPage extends StatelessWidget {
         return CupertinoPageScaffold(
           child: CustomSliver(
             minExtent: 100,
-            maxExtent: 300,
+            maxExtent: 200,
             buildHeader: buildHeader,
             body: buildBody(context),
           ),
@@ -33,7 +33,7 @@ class SubjectDetailPage extends StatelessWidget {
   }
 
   Widget buildHeader(BuildContext context, double shrinkOffset) {
-    const maxExtent = 300;
+    const maxExtent = 200;
     // final shrinkRatio = clampDouble(1 - shrinkOffset / maxExtent, 0, 1);
     final opacity = clampDouble(1 - 2 * shrinkOffset / maxExtent, 0, 1);
     return Stack(
@@ -54,7 +54,7 @@ class SubjectDetailPage extends StatelessWidget {
         Positioned(
           left: 12.0,
           right: 12.0,
-          bottom: 12.0 + opacity * 64,
+          bottom: 12.0 + opacity * 16,
           child: Consumer<ClassProvider>(builder:
               (BuildContext context, ClassProvider provider, Widget? child) {
             return Row(

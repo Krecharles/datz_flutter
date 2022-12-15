@@ -15,9 +15,7 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // LegacyDataLoader.checkPreferences();
-
-    // DataLoader.saveClass(myClass);
+    DataLoader.loadAllClassMetaModels();
 
     return ChangeNotifierProvider<ClassProvider>(
       create: (_) => ClassProvider(),

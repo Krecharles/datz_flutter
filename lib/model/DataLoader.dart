@@ -1,5 +1,11 @@
 import 'dart:convert';
 
+import 'package:datz_flutter/model/class_meta_model.dart';
+
+import 'dart:convert';
+
+import 'package:flutter/services.dart';
+
 import 'package:datz_flutter/model/data.dart';
 import 'package:datz_flutter/model/ClassModel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -47,5 +53,23 @@ class DataLoader {
     userDefaults.setString(
         generateClassUserDefaultsKey(c.id), json.encode(classJson).toString());
     print("Saved class ${c.name} with id ${c.id} successfully");
+  }
+
+  static Future<List<ClassMetaModel>> loadAllClassMetaModels() async {
+    print("Loading all classes metadata");
+    try {
+      final String response = await rootBundle
+          .loadString('assets/class_meta_data/classiqueClasses.json');
+      List<ClassMetaModel> allClassMetaModels = [];
+      final List<dynamic> data = await json.decode(response);
+      for (Map<String, dynamic> classData in data) {
+        allClassMetaModels.add(ClassMetaModel.fromJson(classData));
+      }
+      print(allClassMetaModels);
+      return allClassMetaModels;
+    } catch (e) {
+      print("could not load Class Meta Models.");
+      rethrow;
+    }
   }
 }
