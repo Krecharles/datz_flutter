@@ -1,5 +1,6 @@
-import 'package:datz_flutter/model/ClassModel.dart';
-import 'package:datz_flutter/model/TestModel.dart';
+import 'package:datz_flutter/model/class_model.dart';
+import 'package:datz_flutter/model/test_model.dart';
+import 'package:flutter/foundation.dart';
 
 /// parent class for SimpeSubject and CombiSubject
 /// not intended to be instatiated
@@ -61,11 +62,14 @@ class SimpleSubject extends Subject {
           .map((s) => FixedContributionTest.fromJson(s))
           .toList();
     } catch (e) {
-      print("There was an error trying to parse SimpleSubject $name: $e");
+      if (kDebugMode) {
+        print("There was an error trying to parse SimpleSubject $name: $e");
+      }
       rethrow;
     }
   }
 
+  @override
   Map<String, dynamic> toJson() => {
         'name': name,
         'id': id,
@@ -128,11 +132,14 @@ class CombiSubject extends Subject {
       subSubjects =
           subSubjectsList.map((s) => SimpleSubject.fromJson(s)).toList();
     } catch (e) {
-      print("There was an error trying to parse SimpleSubject $name: $e");
+      if (kDebugMode) {
+        print("There was an error trying to parse SimpleSubject $name: $e");
+      }
       rethrow;
     }
   }
 
+  @override
   Map<String, dynamic> toJson() => {
         'name': name,
         'id': id,
@@ -148,14 +155,14 @@ class CombiSubject extends Subject {
   /// the average without rounding but with bonus
   @override
   double calcExactAvg() {
-    double gradeSum = 0;
-    double coefSum = 0;
+    // double gradeSum = 0;
+    // double coefSum = 0;
 
-    for (SimpleSubject s in subSubjects) {
-      if (!s.isAvgCalculable()) continue;
-      gradeSum += s.coef * s.calcExactAvg();
-      coefSum += s.coef;
-    }
+    // for (SimpleSubject s in subSubjects) {
+    //   if (!s.isAvgCalculable()) continue;
+    //   gradeSum += s.coef * s.calcExactAvg();
+    //   coefSum += s.coef;
+    // }
 
     final calcableSubjects =
         subSubjects.where((s) => s.isAvgCalculable()).toList();

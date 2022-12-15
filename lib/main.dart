@@ -1,18 +1,16 @@
-import 'package:datz_flutter/components/SlidableListView.dart';
-import 'package:datz_flutter/model/DataLoader.dart';
-import 'package:datz_flutter/model/data.dart';
-import 'package:datz_flutter/model/legacyDataLoader.dart';
-import 'package:datz_flutter/model/ClassModel.dart';
-import 'package:datz_flutter/pages/HomePage.dart';
-import 'package:datz_flutter/providers/ClassProvider.dart';
+import 'package:datz_flutter/model/data_loader.dart';
+import 'package:datz_flutter/pages/home_page.dart';
+import 'package:datz_flutter/providers/class_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     DataLoader.loadAllClassMetaModels();

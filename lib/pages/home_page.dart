@@ -1,7 +1,7 @@
-import 'package:datz_flutter/components/Buttons.dart';
-import 'package:datz_flutter/components/CustomeSliver.dart';
-import 'package:datz_flutter/components/SliverHeader.dart';
-import 'package:datz_flutter/components/SubjectList.dart';
+import 'package:datz_flutter/components/buttons.dart';
+import 'package:datz_flutter/components/custom_sliver.dart';
+import 'package:datz_flutter/components/sliver_header.dart';
+import 'package:datz_flutter/components/subject_list.dart';
 import 'package:flutter/cupertino.dart';
 
 class HomePage extends StatelessWidget {

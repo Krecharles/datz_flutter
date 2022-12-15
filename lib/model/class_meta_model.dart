@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 class ClassMetaModel {
   late String name;
   late List<SemesterMetaModel> semesters;
@@ -21,7 +23,9 @@ class ClassMetaModel {
       final subjectsList = json["subjects"] as List<dynamic>;
       subjects = subjectsList.map((s) => SubjectMetaModel.fromJson(s)).toList();
     } catch (e) {
-      print("There was an error trying to parse Class MetaData $name: $e");
+      if (kDebugMode) {
+        print("There was an error trying to parse Class MetaData $name: $e");
+      }
       rethrow;
     }
   }
@@ -42,7 +46,9 @@ class SubjectMetaModel {
             subSubjectsList.map((s) => SubjectMetaModel.fromJson(s)).toList();
       }
     } catch (e) {
-      print("There was an error trying to parse Subject MetaData $name: $e");
+      if (kDebugMode) {
+        print("There was an error trying to parse Subject MetaData $name: $e");
+      }
       rethrow;
     }
   }
@@ -62,7 +68,10 @@ class SemesterMetaModel {
       name = json["name"];
       coef = json["coef"];
     } catch (e) {
-      print("There was an error trying to parse Semester MetaModel $name: $e");
+      if (kDebugMode) {
+        print(
+            "There was an error trying to parse Semester MetaModel $name: $e");
+      }
       rethrow;
     }
   }

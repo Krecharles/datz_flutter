@@ -1,5 +1,5 @@
-import 'package:datz_flutter/components/Buttons.dart';
-import 'package:datz_flutter/providers/ClassProvider.dart';
+import 'package:datz_flutter/components/buttons.dart';
+import 'package:datz_flutter/providers/class_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 

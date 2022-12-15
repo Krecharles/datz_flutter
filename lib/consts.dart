@@ -22,7 +22,7 @@ class CustomDecorations {
           CustomColors.color1.resolveFrom(context),
           CustomColors.color2.resolveFrom(context)
         ],
-        stops: [0, 1.0],
+        stops: const [0, 1.0],
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
         tileMode: TileMode.repeated,

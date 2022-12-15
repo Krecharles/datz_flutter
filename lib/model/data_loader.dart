@@ -1,13 +1,11 @@
 import 'dart:convert';
 
 import 'package:datz_flutter/model/class_meta_model.dart';
-
-import 'dart:convert';
+import 'package:flutter/foundation.dart';
 
 import 'package:flutter/services.dart';
 
-import 'package:datz_flutter/model/data.dart';
-import 'package:datz_flutter/model/ClassModel.dart';
+import 'package:datz_flutter/model/class_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DataLoader {
@@ -31,11 +29,12 @@ class DataLoader {
       final classData =
           userDefaults.getString(generateClassUserDefaultsKey(classId));
       final c = Class.fromJson(json.decode(classData!));
-      print("Loaded class ${c.name} with id ${c.id}");
+      // print("Loaded class ${c.name} with id ${c.id}");
       return c;
     } catch (e) {
-      print("Loading class $classId failed");
-      print(e);
+      if (kDebugMode) {
+        print("Loading class $classId failed: $e");
+      }
       return null;
     }
   }
@@ -52,11 +51,15 @@ class DataLoader {
     Map<String, dynamic> classJson = c.toJson();
     userDefaults.setString(
         generateClassUserDefaultsKey(c.id), json.encode(classJson).toString());
-    print("Saved class ${c.name} with id ${c.id} successfully");
+    if (kDebugMode) {
+      print("Saved class ${c.name} with id ${c.id} successfully");
+    }
   }
 
   static Future<List<ClassMetaModel>> loadAllClassMetaModels() async {
-    print("Loading all classes metadata");
+    if (kDebugMode) {
+      print("Loading all classes metadata");
+    }
     try {
       final String response = await rootBundle
           .loadString('assets/class_meta_data/classiqueClasses.json');
@@ -68,7 +71,9 @@ class DataLoader {
       print(allClassMetaModels);
       return allClassMetaModels;
     } catch (e) {
-      print("could not load Class Meta Models.");
+      if (kDebugMode) {
+        print("could not load Class Meta Models. $e");
+      }
       rethrow;
     }
   }

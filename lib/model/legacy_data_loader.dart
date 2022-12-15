@@ -1,12 +1,8 @@
-import 'dart:convert';
-
-import 'package:datz_flutter/model/ClassModel.dart';
 import 'package:native_shared_preferences/native_shared_preferences.dart';
 
 class LegacyDataLoader {
   static void checkPreferences() async {
-    NativeSharedPreferences prefs = await NativeSharedPreferences.getInstance();
-
+    // NativeSharedPreferences prefs = await NativeSharedPreferences.getInstance();
     // print("hopefuly this works, fingers crossed");
     // print(prefs.getKeys());
     // final String classString = utf8.decode(prefs.get('KEY_1E') as List<int>);

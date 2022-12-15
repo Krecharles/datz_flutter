@@ -1,7 +1,7 @@
-import 'package:datz_flutter/model/ClassModel.dart';
-import 'package:datz_flutter/model/SemesterModel.dart';
-import 'package:datz_flutter/model/SubjectModel.dart';
-import 'package:datz_flutter/model/TestModel.dart';
+import 'package:datz_flutter/model/class_model.dart';
+import 'package:datz_flutter/model/semester_model.dart';
+import 'package:datz_flutter/model/subject_model.dart';
+import 'package:datz_flutter/model/test_model.dart';
 
 final myClass = Class(
   name: "3MB",

@@ -1,4 +1,5 @@
-import 'package:datz_flutter/model/ClassModel.dart';
+import 'package:datz_flutter/model/class_model.dart';
+import 'package:flutter/foundation.dart';
 
 class Test {
   late String name;
@@ -20,7 +21,9 @@ class Test {
       maxGrade = json["maxGrade"];
       id = json["id"];
     } catch (e) {
-      print("There was an error trying to parse Test $name: $e");
+      if (kDebugMode) {
+        print("There was an error trying to parse Test $name: $e");
+      }
       rethrow;
     }
   }
@@ -53,11 +56,14 @@ class FixedContributionTest extends Test {
       id = json["id"];
       contribution = json["contribution"];
     } catch (e) {
-      print("There was an error trying to parse Test $name: $e");
+      if (kDebugMode) {
+        print("There was an error trying to parse Test $name: $e");
+      }
       rethrow;
     }
   }
 
+  @override
   Map<String, dynamic> toJson() => {
         'name': name,
         'id': id,

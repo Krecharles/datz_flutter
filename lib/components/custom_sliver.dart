@@ -38,7 +38,9 @@ class CustomSliver extends StatelessWidget {
 }
 
 class SliverDelegate implements SliverPersistentHeaderDelegate {
+  @override
   final double minExtent;
+  @override
   final double maxExtent;
   final Function buildHeader;
   SliverDelegate({
@@ -64,21 +66,17 @@ class SliverDelegate implements SliverPersistentHeaderDelegate {
   }
 
   @override
-  // TODO: implement showOnScreenConfiguration
   PersistentHeaderShowOnScreenConfiguration? get showOnScreenConfiguration =>
-      PersistentHeaderShowOnScreenConfiguration();
+      const PersistentHeaderShowOnScreenConfiguration();
 
   @override
-  // TODO: implement snapConfiguration
   FloatingHeaderSnapConfiguration? get snapConfiguration =>
       FloatingHeaderSnapConfiguration();
 
   @override
-  // TODO: implement stretchConfiguration
   OverScrollHeaderStretchConfiguration? get stretchConfiguration =>
       OverScrollHeaderStretchConfiguration();
 
   @override
-  // TODO: implement vsync
   TickerProvider? get vsync => throw UnimplementedError();
 }

@@ -1,6 +1,7 @@
 import 'dart:math';
 
-import 'package:datz_flutter/model/SemesterModel.dart';
+import 'package:datz_flutter/model/semester_model.dart';
+import 'package:flutter/foundation.dart';
 
 class Class {
   late String name;
@@ -23,7 +24,9 @@ class Class {
       final semesterList = json["semesters"] as List<dynamic>;
       semesters = semesterList.map((s) => Semester.fromJson(s)).toList();
     } catch (e) {
-      print("There was an error trying to parse Class $name: $e");
+      if (kDebugMode) {
+        print("There was an error trying to parse Class $name: $e");
+      }
       rethrow;
     }
   }

@@ -1,8 +1,7 @@
 import 'package:datz_flutter/consts.dart';
-import 'package:datz_flutter/providers/ClassProvider.dart';
+import 'package:datz_flutter/providers/class_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class SliverHeader extends StatelessWidget {
@@ -12,7 +11,7 @@ class SliverHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const maxExtent = 300;
-    final shrinkRatio = clampDouble(1 - shrinkOffset / maxExtent, 0, 1);
+    // final shrinkRatio = clampDouble(1 - shrinkOffset / maxExtent, 0, 1);
     final opacity = clampDouble(1 - 2 * shrinkOffset / maxExtent, 0, 1);
     return Stack(
       fit: StackFit.expand,

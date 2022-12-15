@@ -14,7 +14,7 @@ class SlidableListView extends StatefulWidget {
 }
 
 class _SlidableListViewState extends State<SlidableListView> {
-  Set<SlidableController> _slidableControllers = {};
+  final Set<SlidableController> _slidableControllers = {};
   late SlidableListProvider slidableListProvider;
 
   @override
@@ -22,7 +22,6 @@ class _SlidableListViewState extends State<SlidableListView> {
     super.initState();
     slidableListProvider =
         Provider.of<SlidableListProvider>(context, listen: false);
-    print(slidableListProvider);
     slidableListProvider.subscribeEditModeListener(onChangeEditMode);
   }
 
@@ -124,6 +123,7 @@ class SlidableControllerSender extends StatefulWidget {
   final Function removeController;
 
   @override
+  // ignore: library_private_types_in_public_api
   _SlidableControllerSenderState createState() =>
       _SlidableControllerSenderState();
 }

@@ -1,9 +1,7 @@
-import 'package:datz_flutter/components/Buttons.dart';
-import 'package:datz_flutter/consts.dart';
-import 'package:datz_flutter/model/TestModel.dart';
-import 'package:datz_flutter/providers/ClassProvider.dart';
+import 'package:datz_flutter/components/buttons.dart';
+import 'package:datz_flutter/model/test_model.dart';
+import 'package:datz_flutter/providers/class_provider.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class TestEditPage extends StatefulWidget {

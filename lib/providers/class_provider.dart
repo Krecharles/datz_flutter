@@ -1,11 +1,10 @@
-import 'package:datz_flutter/model/DataLoader.dart';
-import 'package:datz_flutter/model/SubjectModel.dart';
-import 'package:datz_flutter/model/data.dart';
-import 'package:datz_flutter/model/ClassModel.dart';
+import 'package:datz_flutter/model/data_loader.dart';
+import 'package:datz_flutter/model/subject_model.dart';
+import 'package:datz_flutter/model/class_model.dart';
 import 'package:flutter/cupertino.dart';
 
-import '../model/SemesterModel.dart';
-import '../model/TestModel.dart';
+import '../model/semester_model.dart';
+import '../model/test_model.dart';
 
 class ClassProvider with ChangeNotifier {
   Class? selectedClass;

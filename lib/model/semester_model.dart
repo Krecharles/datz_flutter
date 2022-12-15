@@ -1,5 +1,6 @@
-import 'package:datz_flutter/model/ClassModel.dart';
-import 'package:datz_flutter/model/SubjectModel.dart';
+import 'package:datz_flutter/model/class_model.dart';
+import 'package:datz_flutter/model/subject_model.dart';
+import 'package:flutter/foundation.dart';
 
 class Semester {
   late String name;
@@ -26,7 +27,9 @@ class Semester {
         return SimpleSubject.fromJson(s);
       }).toList();
     } catch (e) {
-      print("There was an error trying to parse Semester $name: $e");
+      if (kDebugMode) {
+        print("There was an error trying to parse Semester $name: $e");
+      }
       rethrow;
     }
   }

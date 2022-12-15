@@ -1,7 +1,7 @@
-import 'package:datz_flutter/model/SemesterModel.dart';
-import 'package:datz_flutter/model/SubjectModel.dart';
-import 'package:datz_flutter/pages/SubjectDetailPage.dart';
-import 'package:datz_flutter/providers/ClassProvider.dart';
+import 'package:datz_flutter/model/semester_model.dart';
+import 'package:datz_flutter/model/subject_model.dart';
+import 'package:datz_flutter/pages/subject_detail_page.dart';
+import 'package:datz_flutter/providers/class_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 
