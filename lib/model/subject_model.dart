@@ -133,13 +133,13 @@ class CombiSubject extends Subject {
 
   CombiSubject.fromMetaModel(SubjectMetaModel subjectMetaModel)
       : super(name: subjectMetaModel.name, coef: subjectMetaModel.coef) {
+    subSubjects = [];
     for (SubjectMetaModel subModels in subjectMetaModel.subSubjects) {
       if (subModels.subSubjects.isNotEmpty) {
         if (kDebugMode) {
           print("Multiple nested subSubjects not allowed");
         }
       } else {
-        subSubjects = [];
         subSubjects.add(SimpleSubject.fromMetaModel(subModels));
       }
     }

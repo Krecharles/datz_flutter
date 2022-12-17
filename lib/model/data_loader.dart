@@ -114,6 +114,7 @@ class DataLoader {
     userDefaults.setStringList("allClassIds", allIds.map((e) => "$e").toList());
   }
 
+  /// Loads every class the user has in persitent memory
   static Future<List<Class>> loadAllClasses() async {
     final allIds = await loadAllClassIds();
     List<Class> allClasses = [];
@@ -123,5 +124,19 @@ class DataLoader {
     }
 
     return allClasses;
+  }
+
+  /// Deletes a user created class, usually in the class picker page
+  /// should be called in combination with removeClassId()
+  static void deleteClass(int classId) async {
+    try {
+      final userDefaults = await SharedPreferences.getInstance();
+      userDefaults.remove(generateClassUserDefaultsKey(classId));
+    } catch (e) {
+      if (kDebugMode) {
+        print("Deleting class $classId failed: $e");
+      }
+      return null;
+    }
   }
 }

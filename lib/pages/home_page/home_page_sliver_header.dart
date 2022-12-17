@@ -3,6 +3,7 @@ import 'package:datz_flutter/consts.dart';
 import 'package:datz_flutter/providers/class_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class HomePageSliverHeader extends StatelessWidget {
@@ -20,7 +21,7 @@ class HomePageSliverHeader extends StatelessWidget {
         Container(
           decoration: CustomDecorations.primaryGradientDecoration(context),
         ),
-        // buildClassIndicator(opacity),
+        buildClassIndicator(opacity),
         buildAvgLabel(opacity),
         buildSemesterPicker(opacity)
       ],
@@ -72,11 +73,9 @@ class HomePageSliverHeader extends StatelessWidget {
         child: Consumer<ClassProvider>(builder:
             (BuildContext context, ClassProvider provider, Widget? child) {
           return SafeArea(
-            child: Button(
-              text: "3MB",
-              type: ButtonType.plain,
-              // leadingIcon: CupertinoIcons.,
-              onPressed: () {},
+            child: Text(
+              provider.selectedClass?.name ?? "",
+              style: const TextStyle(color: Colors.white),
             ),
           );
         }),

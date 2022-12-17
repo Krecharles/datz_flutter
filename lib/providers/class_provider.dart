@@ -2,6 +2,7 @@ import 'package:datz_flutter/model/data_loader.dart';
 import 'package:datz_flutter/model/subject_model.dart';
 import 'package:datz_flutter/model/class_model.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 
 import '../model/semester_model.dart';
 import '../model/test_model.dart';
@@ -23,13 +24,48 @@ class ClassProvider with ChangeNotifier {
     super.notifyListeners();
   }
 
+  /// Loads the last used class from persistent memory
   void loadCurrentClass() async {
+    // TODO check if loadedClass does not exist, in that case
+    // use a random other class or force class picker view
     Class? loadedClass = await DataLoader.loadCurrentClass();
     selectedClass = loadedClass;
+    if (kDebugMode) {
+      print("Loaded class: \n$selectedClass");
+    }
+    notifyListeners();
+  }
+
+  void deleteClass(BuildContext context, int classId) {
+    if (classId == selectedClass?.id) {
+      showCupertinoModalPopup<void>(
+        context: context,
+        builder: (BuildContext context) => CupertinoAlertDialog(
+          title: const Text('Cannot delete active Class'),
+          content:
+              const Text('Select a different Class before deleting this one'),
+          actions: <CupertinoDialogAction>[
+            CupertinoDialogAction(
+              isDefaultAction: true,
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text('Ok'),
+            ),
+          ],
+        ),
+      );
+      return;
+    }
+    DataLoader.deleteClass(classId);
+    DataLoader.removeClassId(classId);
     notifyListeners();
   }
 
   void selectClass(Class c) {
+    if (kDebugMode) {
+      print("Selected class: \n$c");
+    }
     selectedClass = c;
     selectedSemester = 0;
     selectedSubjectId = null;

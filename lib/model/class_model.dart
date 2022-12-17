@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:datz_flutter/model/class_meta_model.dart';
@@ -47,6 +48,9 @@ class Class {
         'id': id,
         'semesters': semesters.map((s) => s.toJson()).toList(),
       };
+
+  @override
+  String toString() => const JsonEncoder.withIndent("  ").convert(toJson());
 
   List<String> getSemesterNames() {
     return semesters.map((Semester sem) => sem.name).toList();
