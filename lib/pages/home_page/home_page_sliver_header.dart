@@ -1,4 +1,3 @@
-import 'package:datz_flutter/components/buttons.dart';
 import 'package:datz_flutter/consts.dart';
 import 'package:datz_flutter/providers/class_provider.dart';
 import 'package:flutter/cupertino.dart';

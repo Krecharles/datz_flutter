@@ -95,77 +95,85 @@ class _TestEditPageState extends State<TestEditPage> {
         child: SafeArea(
           child: Column(
             children: [
-              CupertinoListSection.insetGrouped(
-                children: [
-                  CupertinoListTile.notched(
-                    title: const Text("Name"),
-                    trailing: SizedBox(
-                      width: 128,
-                      child: CupertinoTextField(
-                        autocorrect: false,
-                        controller: _nameController,
-                      ),
-                    ),
-                  ),
-                  CupertinoListTile.notched(
-                    title: const Text("Grade"),
-                    trailing: SizedBox(
-                      width: 64,
-                      child: CupertinoTextField(
-                        placeholder: "45",
-                        autocorrect: false,
-                        controller: _gradeController,
-                        keyboardType: const TextInputType.numberWithOptions(
-                            decimal: true),
-                        // controller: TextEditingController(text: "Test 1"),
-                      ),
-                    ),
-                  ),
-                  CupertinoListTile.notched(
-                    title: const Text("Max Grade"),
-                    trailing: SizedBox(
-                      width: 64,
-                      child: CupertinoTextField(
-                        autocorrect: false,
-                        controller: _maxGradeController,
-                        keyboardType: const TextInputType.numberWithOptions(
-                            decimal: true),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+              buildInputForm(),
               const SizedBox(height: 32),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Button(
-                    type: ButtonType.filled,
-                    text: widget.editTest == null ? "Add" : "Save",
-                    onPressed: onSubmit,
-                    // leadingIcon: CupertinoIcons.add,
-                  ),
-                  if (widget.editTest != null) ...[
-                    const SizedBox(width: 4),
-                    Button(
-                      type: ButtonType.plain,
-                      color: CupertinoColors.systemRed,
-                      text: "Delete",
-                      onPressed: () {
-                        Provider.of<ClassProvider>(context, listen: false)
-                            .deleteTest(widget.editTest!.id);
-                        Navigator.pop(context);
-                      },
-                      // leadingIcon: CupertinoIcons.trash,
-                    ),
-                  ]
-                ],
-              ),
+              buildSubmitButtonRow(context),
               // CupertinoTextField(),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  CupertinoListSection buildInputForm() {
+    return CupertinoListSection.insetGrouped(
+      children: [
+        CupertinoListTile.notched(
+          title: const Text("Name"),
+          trailing: SizedBox(
+            width: 128,
+            child: CupertinoTextField(
+              autocorrect: false,
+              controller: _nameController,
+            ),
+          ),
+        ),
+        CupertinoListTile.notched(
+          title: const Text("Grade"),
+          trailing: SizedBox(
+            width: 64,
+            child: CupertinoTextField(
+              placeholder: "45",
+              autocorrect: false,
+              controller: _gradeController,
+              keyboardType:
+                  const TextInputType.numberWithOptions(decimal: true),
+              // controller: TextEditingController(text: "Test 1"),
+            ),
+          ),
+        ),
+        CupertinoListTile.notched(
+          title: const Text("Max Grade"),
+          trailing: SizedBox(
+            width: 64,
+            child: CupertinoTextField(
+              autocorrect: false,
+              controller: _maxGradeController,
+              keyboardType:
+                  const TextInputType.numberWithOptions(decimal: true),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Row buildSubmitButtonRow(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Button(
+          type: ButtonType.filled,
+          text: widget.editTest == null ? "Add" : "Save",
+          onPressed: onSubmit,
+          // leadingIcon: CupertinoIcons.add,
+        ),
+        if (widget.editTest != null) ...[
+          const SizedBox(width: 4),
+          Button(
+            type: ButtonType.plain,
+            color: CupertinoColors.systemRed,
+            text: "Delete",
+            onPressed: () {
+              Provider.of<ClassProvider>(context, listen: false)
+                  .deleteTest(widget.editTest!.id);
+              Navigator.pop(context);
+            },
+            // leadingIcon: CupertinoIcons.trash,
+          ),
+        ]
+      ],
     );
   }
 }

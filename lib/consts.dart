@@ -5,6 +5,8 @@ class CustomColors {
       color: Color(0xFF848BAD), darkColor: Color(0xFF636880));
   static const color2 = CupertinoDynamicColor.withBrightness(
       color: Color(0xFFBA9DB3), darkColor: Color(0xFF8D6584));
+  static const colorMid = CupertinoDynamicColor.withBrightness(
+      color: Color(0xFF9F92B2), darkColor: Color(0xFF796583));
 
   static Color backgroundColor(BuildContext context) {
     return CupertinoDynamicColor.withBrightness(

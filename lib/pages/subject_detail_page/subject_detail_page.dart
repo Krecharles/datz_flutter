@@ -1,13 +1,12 @@
 import 'package:datz_flutter/components/bonus_stepper_tile.dart';
 import 'package:datz_flutter/components/buttons.dart';
-import 'package:datz_flutter/components/custom_sliver.dart';
-import 'package:datz_flutter/components/slidable_list_view.dart';
 import 'package:datz_flutter/consts.dart';
 import 'package:datz_flutter/model/test_model.dart';
 import 'package:datz_flutter/pages/edit_test_page.dart';
 import 'package:datz_flutter/providers/class_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:provider/provider.dart';
 
@@ -16,19 +15,18 @@ class SubjectDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<SlidableListProvider>(
-      create: (_) => SlidableListProvider(),
-      child: Consumer<ClassProvider>(builder:
-          (BuildContext context, ClassProvider provider, Widget? child) {
-        return CupertinoPageScaffold(
-          child: CustomSliver(
-            minExtent: 100,
-            maxExtent: 200,
-            buildHeader: buildHeader,
-            body: buildBody(context),
-          ),
-        );
-      }),
+    return CupertinoPageScaffold(
+      navigationBar: CupertinoNavigationBar(
+        backgroundColor: CustomColors.colorMid,
+        previousPageTitle: "Back",
+        middle: Text(
+          context.watch<ClassProvider>().getSelectedSubject()?.name ?? "",
+          style: const TextStyle(color: Colors.white),
+        ),
+      ),
+      child: SingleChildScrollView(
+        child: SafeArea(child: buildBody(context)),
+      ),
     );
   }
 
@@ -95,46 +93,39 @@ class SubjectDetailPage extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Consumer<ClassProvider>(builder:
-                (BuildContext context, ClassProvider provider, Widget? child) {
-              return Button(
-                text: "Add Test",
-                type: ButtonType.tinted,
-                leadingIcon: CupertinoIcons.add,
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    CupertinoPageRoute(
-                      builder: (context) => TestEditPage(
-                        onSubmit: (Test newTest) => provider.addTest(newTest),
-                      ),
-                    ),
-                  );
-                },
-              );
-            }),
-            Consumer<SlidableListProvider>(
-              builder: (context, provider, child) {
-                return Button(
-                  text: provider.isInEditMode ? "Finish" : "Edit",
-                  type: ButtonType.plain,
-                  onPressed: provider.toggleEditMode,
-                );
-              },
-            ),
+            buildAddTestButton(),
           ],
         ),
       ],
     );
   }
 
+  Consumer<ClassProvider> buildAddTestButton() {
+    return Consumer<ClassProvider>(
+        builder: (BuildContext context, ClassProvider provider, Widget? child) {
+      return Button(
+        text: "Add Test",
+        type: ButtonType.tinted,
+        leadingIcon: CupertinoIcons.add,
+        onPressed: () {
+          Navigator.push(
+            context,
+            CupertinoPageRoute(
+              builder: (context) => TestEditPage(
+                onSubmit: (Test newTest) => provider.addTest(newTest),
+              ),
+            ),
+          );
+        },
+      );
+    });
+  }
+
   Widget buildTestList(BuildContext context) {
-    ClassProvider provider = Provider.of<ClassProvider>(context, listen: false);
-    if (provider.getSelectedSubject()?.tests == null) {
-      return const Text("no tests");
-    }
-    if (provider.getSelectedSubject()!.tests.isEmpty) {
-      return const Text("no tests");
+    ClassProvider provider = context.watch<ClassProvider>();
+    final tests = provider.getSelectedSubject()?.tests;
+    if (tests == null || tests.isEmpty) {
+      return Container();
     }
     return CupertinoListSection.insetGrouped(
       children: [
@@ -168,50 +159,40 @@ class SubjectDetailPage extends StatelessWidget {
                 ),
               ],
             ),
-            child: CupertinoListTile.notched(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  CupertinoPageRoute(
-                    builder: (context) => TestEditPage(
-                      editTest: t,
-                      onSubmit: (Test newTest) => provider.editTest(newTest),
-                    ),
-                  ),
-                );
-              },
-              title: Text(t.name),
-              trailing: Row(
-                children: [
-                  Text(
-                    "${t.grade} / ${t.maxGrade}",
-                    style: TextStyle(
-                        color: CupertinoColors.secondaryLabel
-                            .resolveFrom(context)),
-                  ),
-                  const SizedBox(width: 4),
-                  Icon(CupertinoIcons.chevron_right,
-                      color: CupertinoColors.systemFill.resolveFrom(context)),
-                ],
-              ),
-            ),
+            child: buildTestTile(context, t, provider),
           ),
       ],
     );
+  }
 
-    // return SlidableListView(
-    //   children: [
-    //     for (Test t in provider.getSelectedSubject()!.tests)
-    //       CupertinoListTile.notched(
-    //         title: Text(t.name),
-    //         trailing: Text(
-    //           "${t.grade} / ${t.maxGrade}",
-    //           style: TextStyle(
-    //               color: CupertinoColors.secondaryLabel.resolveFrom(context)),
-    //         ),
-    //       ),
-    //   ],
-    // );
+  CupertinoListTile buildTestTile(
+      BuildContext context, Test t, ClassProvider provider) {
+    return CupertinoListTile.notched(
+      onTap: () {
+        Navigator.push(
+          context,
+          CupertinoPageRoute(
+            builder: (context) => TestEditPage(
+              editTest: t,
+              onSubmit: (Test newTest) => provider.editTest(newTest),
+            ),
+          ),
+        );
+      },
+      title: Text(t.name),
+      trailing: Row(
+        children: [
+          Text(
+            "${t.grade} / ${t.maxGrade}",
+            style: TextStyle(
+                color: CupertinoColors.secondaryLabel.resolveFrom(context)),
+          ),
+          const SizedBox(width: 4),
+          Icon(CupertinoIcons.chevron_right,
+              color: CupertinoColors.systemFill.resolveFrom(context)),
+        ],
+      ),
+    );
   }
 
   Widget buildSubjectInfoCard(BuildContext context) {
@@ -227,7 +208,7 @@ class SubjectDetailPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Text(
-              provider.getSelectedSubject()?.name ?? "",
+              provider.getSelectedSubject()?.formattedAvg() ?? "",
               style: TextStyle(
                 color: CupertinoColors.label.resolveFrom(context),
                 fontSize: 34,
