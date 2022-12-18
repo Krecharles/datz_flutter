@@ -69,8 +69,7 @@ class SimpleSubjectListTile extends StatelessWidget {
                           CupertinoColors.secondaryLabel.resolveFrom(context)),
                 ),
                 const SizedBox(width: 4),
-                Icon(CupertinoIcons.chevron_right,
-                    color: CupertinoColors.systemFill.resolveFrom(context)),
+                const CupertinoListTileChevron(),
               ],
             ),
           ),
@@ -130,8 +129,7 @@ class CombiSubjectListTile extends StatelessWidget {
                           CupertinoColors.secondaryLabel.resolveFrom(context)),
                 ),
                 const SizedBox(width: 4),
-                Icon(CupertinoIcons.chevron_right,
-                    color: CupertinoColors.systemFill.resolveFrom(context)),
+                const CupertinoListTileChevron()
               ],
             ),
           );

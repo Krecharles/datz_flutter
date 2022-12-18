@@ -25,7 +25,8 @@ class Semester {
 
     subjects = [];
     for (SubjectMetaModel subjectMetaModel in classMetaModel.subjects) {
-      if (subjectMetaModel.subSubjects.isEmpty) {
+      if (subjectMetaModel.subSubjects == null ||
+          subjectMetaModel.subSubjects!.isEmpty) {
         Subject s = SimpleSubject.fromMetaModel(subjectMetaModel);
         subjects.add(s);
       } else {

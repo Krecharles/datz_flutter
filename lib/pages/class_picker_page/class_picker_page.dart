@@ -1,6 +1,7 @@
 import 'package:datz_flutter/model/class_meta_model.dart';
 import 'package:datz_flutter/model/class_model.dart';
 import 'package:datz_flutter/model/data_loader.dart';
+import 'package:datz_flutter/pages/class_edit_page/class_edit_page.dart';
 import 'package:datz_flutter/providers/class_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -90,6 +91,7 @@ class _ClassPickerPageState extends State<ClassPickerPage> {
             children: [
               buildUserClasses(context),
               buildPresetClasses(context),
+              buildCreateClassButton(context),
             ],
           ),
         ),
@@ -155,6 +157,36 @@ class _ClassPickerPageState extends State<ClassPickerPage> {
             onTap: () => onSelectNewClass(m),
             title: Text(m.name),
           ),
+      ],
+    );
+  }
+
+  onCreateOwnClass(BuildContext context) {
+    Navigator.push(
+      context,
+      CupertinoPageRoute(builder: (context) => const ClassEditPage()),
+    );
+  }
+
+  CupertinoListSection buildCreateClassButton(BuildContext context) {
+    return CupertinoListSection.insetGrouped(
+      header: Padding(
+        padding: const EdgeInsets.only(left: 16.0),
+        child: Text(
+          "Nothing Found?",
+          style: TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.w400,
+            color: CupertinoColors.secondaryLabel.resolveFrom(context),
+          ),
+        ),
+      ),
+      children: [
+        CupertinoListTile.notched(
+          title: const Text("Create your own"),
+          onTap: () => onCreateOwnClass(context),
+          trailing: const CupertinoListTileChevron(),
+        ),
       ],
     );
   }

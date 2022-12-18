@@ -5,6 +5,12 @@ class ClassMetaModel {
   late List<SemesterMetaModel> semesters;
   late List<SubjectMetaModel> subjects;
 
+  ClassMetaModel({
+    required this.name,
+    required this.semesters,
+    required this.subjects,
+  });
+
   /// This method throws an error if something didn't parse correctly or if the
   /// data format is not met. Be sure to wrap it in a try catch
   ClassMetaModel.fromJson(Map<String, dynamic> json) {
@@ -34,7 +40,13 @@ class ClassMetaModel {
 class SubjectMetaModel {
   late String name;
   late double coef;
-  late List<SubjectMetaModel> subSubjects;
+  late List<SubjectMetaModel>? subSubjects;
+
+  SubjectMetaModel({
+    required this.name,
+    required this.coef,
+    this.subSubjects,
+  });
 
   SubjectMetaModel.fromJson(Map<String, dynamic> json) {
     try {
@@ -60,7 +72,10 @@ class SemesterMetaModel {
   late String name;
   late double coef;
 
-  SemesterMetaModel({required this.name, required this.coef});
+  SemesterMetaModel({
+    required this.name,
+    required this.coef,
+  });
 
   /// This method throws an error if something didn't parse correctly or if the
   /// data format is not met. Be sure to wrap it in a try catch

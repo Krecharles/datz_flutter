@@ -1,3 +1,4 @@
+import 'package:datz_flutter/components/forms/form_rows.dart';
 import 'package:datz_flutter/components/buttons.dart';
 import 'package:datz_flutter/model/test_model.dart';
 import 'package:datz_flutter/providers/class_provider.dart';
@@ -37,13 +38,13 @@ class _TestEditPageState extends State<TestEditPage> {
 
   void onSubmit() {
     if (_nameController.value.text == "") {
-      return alertError("Name cannot be Empty.");
+      return alertError(context, "Name cannot be Empty.");
     }
     if (double.tryParse(_gradeController.value.text) == null) {
-      return alertError("Grade must be a Number");
+      return alertError(context, "Grade must be a Number");
     }
     if (double.tryParse(_maxGradeController.value.text) == null) {
-      return alertError("Max Grade must be a Number");
+      return alertError(context, "Max Grade must be a Number");
     }
     Test newTest = Test(
       id: widget.editTest?.id,
@@ -53,42 +54,15 @@ class _TestEditPageState extends State<TestEditPage> {
     );
     widget.onSubmit(newTest);
     Navigator.pop(context);
-    // addTest(newTest);
-  }
-
-  void addTest(Test newTest) {
-    Provider.of<ClassProvider>(context, listen: false).addTest(newTest);
-    Navigator.pop(context);
-  }
-
-  void alertError(String message) {
-    showCupertinoDialog<void>(
-      context: context,
-      builder: (BuildContext context) => CupertinoAlertDialog(
-        title: const Text('Error'),
-        content: Text(message),
-        actions: <CupertinoDialogAction>[
-          CupertinoDialogAction(
-            isDefaultAction: true,
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            child: const Text('OK'),
-          ),
-        ],
-      ),
-    );
   }
 
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
-        // backgroundColor: CustomColors.color2,
         previousPageTitle: "Back",
         middle: Text(
           widget.editTest == null ? "Add Test" : "Edit Test",
-          // style: TextStyle(color: Colors.white),
         ),
       ),
       child: SingleChildScrollView(
@@ -98,7 +72,6 @@ class _TestEditPageState extends State<TestEditPage> {
               buildInputForm(),
               const SizedBox(height: 32),
               buildSubmitButtonRow(context),
-              // CupertinoTextField(),
             ],
           ),
         ),
@@ -109,42 +82,14 @@ class _TestEditPageState extends State<TestEditPage> {
   CupertinoListSection buildInputForm() {
     return CupertinoListSection.insetGrouped(
       children: [
-        CupertinoListTile.notched(
-          title: const Text("Name"),
-          trailing: SizedBox(
-            width: 128,
-            child: CupertinoTextField(
-              autocorrect: false,
-              controller: _nameController,
-            ),
-          ),
-        ),
-        CupertinoListTile.notched(
-          title: const Text("Grade"),
-          trailing: SizedBox(
-            width: 64,
-            child: CupertinoTextField(
-              placeholder: "45",
-              autocorrect: false,
-              controller: _gradeController,
-              keyboardType:
-                  const TextInputType.numberWithOptions(decimal: true),
-              // controller: TextEditingController(text: "Test 1"),
-            ),
-          ),
-        ),
-        CupertinoListTile.notched(
-          title: const Text("Max Grade"),
-          trailing: SizedBox(
-            width: 64,
-            child: CupertinoTextField(
-              autocorrect: false,
-              controller: _maxGradeController,
-              keyboardType:
-                  const TextInputType.numberWithOptions(decimal: true),
-            ),
-          ),
-        ),
+        TextFieldFormRow(
+            title: const Text("Name"), controller: _nameController),
+        NumberFieldFormRow(
+            title: const Text("Grade"),
+            placeholder: "45",
+            controller: _gradeController),
+        NumberFieldFormRow(
+            title: const Text("Max Grade"), controller: _maxGradeController),
       ],
     );
   }

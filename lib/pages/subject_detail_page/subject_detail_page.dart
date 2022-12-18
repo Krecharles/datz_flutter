@@ -188,8 +188,7 @@ class SubjectDetailPage extends StatelessWidget {
                 color: CupertinoColors.secondaryLabel.resolveFrom(context)),
           ),
           const SizedBox(width: 4),
-          Icon(CupertinoIcons.chevron_right,
-              color: CupertinoColors.systemFill.resolveFrom(context)),
+          const CupertinoListTileChevron()
         ],
       ),
     );

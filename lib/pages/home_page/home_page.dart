@@ -30,14 +30,14 @@ class HomePage extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Button(
-                text: "Edit Class",
-                leadingIcon: CupertinoIcons.pen,
-                type: ButtonType.tinted,
-                onPressed: () {
-                  print("TODO edit class");
-                },
-              ),
+              // Button(
+              //   text: "Edit",
+              //   leadingIcon: CupertinoIcons.pen,
+              //   type: ButtonType.tinted,
+              //   onPressed: () {
+              //     print("TODO edit class");
+              //   },
+              // ),
               Button(
                 text: "Change Class",
                 type: ButtonType.plain,
