@@ -8,7 +8,7 @@ import 'package:flutter/foundation.dart';
 class Subject {
   late String name;
   late double coef; // double or int?
-  late int id;
+  late int id; // Must be the same across all semesters
   Subject({required this.name, required this.coef, int? id}) {
     this.id = id ?? randomId();
   }
@@ -50,7 +50,10 @@ class SimpleSubject extends Subject {
   }) : super(id: id);
 
   SimpleSubject.fromMetaModel(SubjectMetaModel subjectMetaModel)
-      : super(name: subjectMetaModel.name, coef: subjectMetaModel.coef) {
+      : super(
+            name: subjectMetaModel.name,
+            coef: subjectMetaModel.coef,
+            id: subjectMetaModel.id) {
     tests = [];
     fixedContributionTests = [];
     plusPoints = 0;
@@ -132,7 +135,10 @@ class CombiSubject extends Subject {
       : super(id: id);
 
   CombiSubject.fromMetaModel(SubjectMetaModel subjectMetaModel)
-      : super(name: subjectMetaModel.name, coef: subjectMetaModel.coef) {
+      : super(
+            name: subjectMetaModel.name,
+            coef: subjectMetaModel.coef,
+            id: subjectMetaModel.id) {
     subSubjects = [];
     for (SubjectMetaModel subModels in subjectMetaModel.subSubjects!) {
       if (subModels.subSubjects != null) {
@@ -151,6 +157,7 @@ class CombiSubject extends Subject {
       name = json["name"];
       coef = json["coef"];
       final subSubjectsList = json["subSubjects"] as List<dynamic>;
+      print("This is weird $subSubjectsList");
       subSubjects =
           subSubjectsList.map((s) => SimpleSubject.fromJson(s)).toList();
     } catch (e) {

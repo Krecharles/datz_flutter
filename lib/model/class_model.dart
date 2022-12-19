@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:datz_flutter/model/class_meta_model.dart';
 import 'package:datz_flutter/model/semester_model.dart';
+import 'package:datz_flutter/model/subject_model.dart';
 import 'package:flutter/foundation.dart';
 
 class Class {
@@ -80,6 +81,60 @@ class Class {
   String formattedAvg() {
     if (!isAvgCalculable()) return "";
     return formatDecimal(calcExactAvg());
+  }
+
+  /// also works for subSubjects
+  Subject? getSubjectWithId(Semester semester, int subId) {
+    for (Subject subject in semester.subjects) {
+      if (subject.id == subId) return subject;
+      if (subject is CombiSubject) {
+        for (SimpleSubject subsub in subject.subSubjects) {
+          if (subsub.id == subId) {
+            return subsub;
+          }
+        }
+      }
+    }
+    return null;
+  }
+
+  /// returns true if there is at least one Semester
+  /// in which the sujects has a grade
+  /// also works for subsubjects
+  bool isSubjectTotalAvgCalculable(int subId) {
+    for (Semester s in semesters) {
+      Subject? sub = getSubjectWithId(s, subId);
+      if (sub == null) {
+        if (kDebugMode) print("There is no subject with id $subId");
+        return false;
+      }
+      if (sub.isAvgCalculable()) return true;
+    }
+    return false;
+  }
+
+  /// should be called after isSubjectAvgCalculable
+  /// also works for subsubjects
+  double getSubjectTotalExactAvg(int subId) {
+    double avg = 0;
+    double coefSum = 0;
+    for (Semester s in semesters) {
+      Subject? sub = getSubjectWithId(s, subId);
+      if (sub == null) {
+        if (kDebugMode) print("Could not calculate final avg");
+        return 0;
+      }
+      if (!sub.isAvgCalculable()) continue;
+      avg += sub.calcFinalAvg() * s.coef;
+      coefSum += s.coef;
+    }
+    return avg / coefSum;
+  }
+
+  /// should be called after isSubjectAvgCalculable
+  /// also works for subsubjects
+  int getSubjectTotalFinalAvg(int subId) {
+    return getSubjectTotalExactAvg(subId).ceil();
   }
 }
 

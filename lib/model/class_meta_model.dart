@@ -1,3 +1,4 @@
+import 'package:datz_flutter/model/class_model.dart';
 import 'package:flutter/foundation.dart';
 
 class ClassMetaModel {
@@ -41,22 +42,27 @@ class SubjectMetaModel {
   late String name;
   late double coef;
   late List<SubjectMetaModel>? subSubjects;
+  late int id; // needed to have every subject in each semesters the same id
 
   SubjectMetaModel({
     required this.name,
     required this.coef,
     this.subSubjects,
-  });
+  }) {
+    id = randomId();
+  }
 
   SubjectMetaModel.fromJson(Map<String, dynamic> json) {
     try {
       name = json["name"];
       coef = json["coef"];
+      id = randomId();
       final subSubjectsList = json["subSubjects"] as List<dynamic>?;
-      subSubjects = [];
       if (subSubjectsList != null) {
         subSubjects =
             subSubjectsList.map((s) => SubjectMetaModel.fromJson(s)).toList();
+      } else {
+        subSubjects = null;
       }
     } catch (e) {
       if (kDebugMode) {
