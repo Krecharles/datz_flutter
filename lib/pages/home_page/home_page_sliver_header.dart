@@ -1,8 +1,11 @@
+import 'package:datz_flutter/components/buttons.dart';
 import 'package:datz_flutter/consts.dart';
+import 'package:datz_flutter/pages/credits_page/credits_page.dart';
 import 'package:datz_flutter/providers/class_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 class HomePageSliverHeader extends StatelessWidget {
@@ -20,14 +23,15 @@ class HomePageSliverHeader extends StatelessWidget {
         Container(
           decoration: CustomDecorations.primaryGradientDecoration(context),
         ),
-        buildClassIndicator(opacity),
-        buildAvgLabel(opacity),
-        buildSemesterPicker(opacity)
+        buildClassIndicator(context, opacity),
+        buildCreditsPageButton(context, opacity),
+        buildAvgLabel(context, opacity),
+        buildSemesterPicker(context, opacity)
       ],
     );
   }
 
-  Widget buildSemesterPicker(double opacity) {
+  Widget buildSemesterPicker(BuildContext context, double opacity) {
     return Positioned(
       left: 12.0,
       right: 12.0,
@@ -63,41 +67,56 @@ class HomePageSliverHeader extends StatelessWidget {
     );
   }
 
-  Widget buildClassIndicator(double opacity) {
+  Widget buildClassIndicator(BuildContext context, double opacity) {
     return Positioned(
       left: 12.0,
       top: 12.0,
       child: Opacity(
         opacity: opacity,
-        child: Consumer<ClassProvider>(builder:
-            (BuildContext context, ClassProvider provider, Widget? child) {
-          return SafeArea(
-            child: Text(
-              provider.selectedClass?.name ?? "",
-              style: const TextStyle(color: Colors.white),
-            ),
-          );
-        }),
+        child: SafeArea(
+          child: Text(
+            context.watch<ClassProvider>().selectedClass?.name ?? "",
+            style: const TextStyle(color: Colors.white),
+          ),
+        ),
       ),
     );
   }
 
-  Widget buildAvgLabel(double opacity) {
+  Widget buildCreditsPageButton(BuildContext context, double opacity) {
+    return Positioned(
+      right: 12.0,
+      top: 12.0,
+      child: Opacity(
+        opacity: opacity,
+        child: SafeArea(
+          child: CupertinoButton(
+            child: const FaIcon(FontAwesomeIcons.github, color: Colors.white),
+            onPressed: () {
+              Navigator.push(
+                context,
+                CupertinoPageRoute(builder: (context) => CreditsPage()),
+              );
+            },
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildAvgLabel(BuildContext context, double opacity) {
     return Positioned(
       left: 12.0,
       right: 12.0,
       bottom: 12.0 + opacity * 64,
-      child: Consumer<ClassProvider>(builder:
-          (BuildContext context, ClassProvider provider, Widget? child) {
-        return Text(
-          calcMainHeaderNumber(provider),
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: 32 + opacity * 64,
-            color: CupertinoColors.white,
-          ),
-        );
-      }),
+      child: Text(
+        calcMainHeaderNumber(context.watch<ClassProvider>()),
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          fontSize: 32 + opacity * 64,
+          color: CupertinoColors.white,
+        ),
+      ),
     );
   }
 

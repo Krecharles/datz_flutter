@@ -109,8 +109,11 @@ class CombiSubjectListTile extends StatelessWidget {
       for (SimpleSubject sub in subject.subSubjects)
         Consumer<ClassProvider>(builder:
             (BuildContext context, ClassProvider provider, Widget? child) {
-          return CupertinoListTile(
-            title: Text(sub.name),
+          return CupertinoListTile.notched(
+            title: Padding(
+              padding: const EdgeInsets.only(left: 24.0),
+              child: Text(sub.name),
+            ),
             onTap: () {
               provider.selectSubjectWithId(sub.id);
               Navigator.push(
