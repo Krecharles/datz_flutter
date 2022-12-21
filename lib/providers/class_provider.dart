@@ -128,16 +128,33 @@ class ClassProvider with ChangeNotifier {
 
   void addTest(Test newTest) {
     if (getSelectedSubject() == null) return;
-    getSelectedSubject()!.tests.add(newTest);
+    if (newTest is FixedContributionTest) {
+      getSelectedSubject()!.fixedContributionTests.add(newTest);
+    } else {
+      getSelectedSubject()!.simpleTests.add(newTest);
+    }
     notifyListeners();
   }
 
   void editTest(Test editedTest) {
     if (getSelectedSubject() == null) return;
 
-    final oldTest = getSelectedSubject()!
-        .tests
-        .firstWhere((Test t) => t.id == editedTest.id);
+    Test oldTest;
+
+    if (editedTest is FixedContributionTest) {
+      oldTest = getSelectedSubject()!
+          .fixedContributionTests
+          .firstWhere((Test t) => t.id == editedTest.id);
+      if (oldTest is FixedContributionTest) {
+        oldTest.contributionFractionBottom =
+            editedTest.contributionFractionBottom;
+        oldTest.contributionFractionTop = editedTest.contributionFractionTop;
+      }
+    } else {
+      oldTest = getSelectedSubject()!
+          .simpleTests
+          .firstWhere((Test t) => t.id == editedTest.id);
+    }
 
     oldTest.name = editedTest.name;
     oldTest.grade = editedTest.grade;
@@ -147,7 +164,10 @@ class ClassProvider with ChangeNotifier {
 
   void deleteTest(int testId) {
     if (getSelectedSubject() == null) return;
-    getSelectedSubject()!.tests.removeWhere((Test t) => t.id == testId);
+    getSelectedSubject()!.simpleTests.removeWhere((Test t) => t.id == testId);
+    getSelectedSubject()!
+        .fixedContributionTests
+        .removeWhere((Test t) => t.id == testId);
     notifyListeners();
   }
 }

@@ -18,11 +18,43 @@ class Class {
     this.id = id ?? randomId();
   }
 
+  List<SemesterMetaModel> calcSemesterMetaModels(
+      bool useSemesters, bool hasExams) {
+    if (useSemesters && !hasExams) {
+      return [
+        SemesterMetaModel(name: "Sem 1", coef: 1),
+        SemesterMetaModel(name: "Sem 2", coef: 1),
+      ];
+    }
+    if (useSemesters && hasExams) {
+      return [
+        SemesterMetaModel(name: "Sem 1", coef: 1),
+        SemesterMetaModel(name: "Sem 2", coef: 1),
+        // exam counts as 2/3
+        SemesterMetaModel(name: "Exam", coef: 4),
+      ];
+    }
+    if (!useSemesters && !hasExams) {
+      return [
+        SemesterMetaModel(name: "Trim 1", coef: 1),
+        SemesterMetaModel(name: "Trim 2", coef: 1),
+        SemesterMetaModel(name: "Trim 3", coef: 1),
+      ];
+    }
+    if (kDebugMode) {
+      print("Invalid semester config in class creation");
+    }
+    throw Error();
+  }
+
   Class.fromMetaModel(ClassMetaModel classMetaModel) {
     name = classMetaModel.name;
     id = randomId();
     semesters = [];
-    for (SemesterMetaModel semesterMetaModel in classMetaModel.semesters) {
+    for (SemesterMetaModel semesterMetaModel in calcSemesterMetaModels(
+      classMetaModel.useSemesters,
+      classMetaModel.hasExams,
+    )) {
       Semester s = Semester.fromMetaModel(classMetaModel, semesterMetaModel);
       semesters.add(s);
     }

@@ -37,13 +37,15 @@ class Test {
 }
 
 class FixedContributionTest extends Test {
-  /// double in [0, 1] indicating how much of the final grade this test makes up
-  late double contribution;
+  /// e.g contributionFractionTop / ContributionFraction Bottom = 1 / 3
+  late int contributionFractionTop;
+  late int contributionFractionBottom;
   FixedContributionTest(
       {required super.name,
       required super.grade,
       required super.maxGrade,
-      required this.contribution,
+      required this.contributionFractionTop,
+      required this.contributionFractionBottom,
       int? id})
       : super(id: id);
 
@@ -54,7 +56,8 @@ class FixedContributionTest extends Test {
       grade = json["grade"];
       maxGrade = json["maxGrade"];
       id = json["id"];
-      contribution = json["contribution"];
+      contributionFractionTop = json["contributionFractionTop"];
+      contributionFractionBottom = json["contributionFractionBottom"];
     } catch (e) {
       if (kDebugMode) {
         print("There was an error trying to parse Test $name: $e");
@@ -69,5 +72,30 @@ class FixedContributionTest extends Test {
         'id': id,
         'grade': grade,
         'maxGrade': maxGrade,
+        'contributionFractionTop': contributionFractionTop,
+        'contributionFractionBottom': contributionFractionBottom,
       };
+
+  double calculateContribution() {
+    return contributionFractionTop.toDouble() /
+        contributionFractionBottom.toDouble();
+  }
+
+  String getContributionFractionString() {
+    return "$contributionFractionTop / $contributionFractionBottom";
+  }
+
+  /// returns a List [a, b] where a is the top fraction and b is the bottom one
+  /// can throw errors if it is not possible
+  static List<int> parseStringToFraction(String string) {
+    final parts = string.replaceAll(" ", "").split("/");
+    if (parts.length != 2) throw "Fraction input needs to have exactly one '/'";
+    try {
+      final left = int.parse(parts[0]);
+      final right = int.parse(parts[1]);
+      return [left, right];
+    } catch (e) {
+      throw "Unable to parse input into a number.";
+    }
+  }
 }

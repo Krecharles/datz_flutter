@@ -37,14 +37,14 @@ class Subject {
 }
 
 class SimpleSubject extends Subject {
-  late List<Test> tests;
+  late List<Test> simpleTests;
   late List<FixedContributionTest> fixedContributionTests;
   late double plusPoints;
   SimpleSubject({
     required super.name,
     required super.coef,
     this.plusPoints = 0,
-    required this.tests,
+    required this.simpleTests,
     this.fixedContributionTests = const [],
     int? id,
   }) : super(id: id);
@@ -54,7 +54,7 @@ class SimpleSubject extends Subject {
             name: subjectMetaModel.name,
             coef: subjectMetaModel.coef,
             id: subjectMetaModel.id) {
-    tests = [];
+    simpleTests = [];
     fixedContributionTests = [];
     plusPoints = 0;
   }
@@ -65,8 +65,8 @@ class SimpleSubject extends Subject {
       name = json["name"];
       coef = json["coef"];
       plusPoints = json["plusPoints"];
-      final testsList = json["tests"] as List<dynamic>;
-      tests = testsList.map((s) => Test.fromJson(s)).toList();
+      final testsList = (json["simpleTests"] ?? []) as List<dynamic>;
+      simpleTests = testsList.map((s) => Test.fromJson(s)).toList();
       final fixedContributionTestsList =
           json["fixedContributionTests"] as List<dynamic>;
       fixedContributionTests = fixedContributionTestsList
@@ -86,33 +86,35 @@ class SimpleSubject extends Subject {
         'id': id,
         'coef': coef,
         'plusPoints': plusPoints,
-        'tests': tests.map((s) => s.toJson()).toList(),
+        'simpleTests': simpleTests.map((s) => s.toJson()).toList(),
         'fixedContributionTests':
             fixedContributionTests.map((s) => s.toJson()).toList(),
       };
 
   @override
   bool isAvgCalculable() {
-    return tests.isNotEmpty || fixedContributionTests.isNotEmpty;
+    return simpleTests.isNotEmpty || fixedContributionTests.isNotEmpty;
   }
 
   double calcExactAvgOfSimpleTests() {
-    double gradeSum = tests.fold(0, (prevVal, test) => prevVal + test.grade);
+    double gradeSum =
+        simpleTests.fold(0, (prevVal, test) => prevVal + test.grade);
     double maxGradeSum =
-        tests.fold(0, (prevVal, test) => prevVal + test.maxGrade);
+        simpleTests.fold(0, (prevVal, test) => prevVal + test.maxGrade);
     return gradeSum / maxGradeSum * 60;
   }
 
   @override
   double calcExactAvg() {
+    /// avg in percent
     double avg = 0;
     double contribution = 1;
     for (FixedContributionTest test in fixedContributionTests) {
-      contribution -= test.contribution;
-      avg += test.contribution * (test.grade / test.maxGrade);
+      contribution -= test.calculateContribution();
+      avg += test.calculateContribution() * (test.grade / test.maxGrade);
     }
 
-    if (tests.isNotEmpty) {
+    if (simpleTests.isNotEmpty) {
       avg += contribution * calcExactAvgOfSimpleTests() / 60;
     } else {
       // if no simple test exists, still display the average
@@ -157,7 +159,6 @@ class CombiSubject extends Subject {
       name = json["name"];
       coef = json["coef"];
       final subSubjectsList = json["subSubjects"] as List<dynamic>;
-      print("This is weird $subSubjectsList");
       subSubjects =
           subSubjectsList.map((s) => SimpleSubject.fromJson(s)).toList();
     } catch (e) {

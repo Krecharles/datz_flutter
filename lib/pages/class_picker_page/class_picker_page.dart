@@ -17,6 +17,7 @@ class ClassPickerPage extends StatefulWidget {
 class _ClassPickerPageState extends State<ClassPickerPage> {
   List<ClassMetaModel> _allClassMetaModels = [];
   List<Class> _userClasses = [];
+  String _searchTerm = "";
 
   void loadData() async {
     _allClassMetaModels = await DataLoader.loadAllClassMetaModels();
@@ -78,17 +79,24 @@ class _ClassPickerPageState extends State<ClassPickerPage> {
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
       navigationBar: const CupertinoNavigationBar(
-        // backgroundColor: CustomColors.color2,
         previousPageTitle: "Back",
         middle: Text(
           "Select Class",
-          // style: TextStyle(color: Colors.white),
         ),
       ),
       child: SingleChildScrollView(
+        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
         child: SafeArea(
           child: Column(
             children: [
+              Padding(
+                padding: const EdgeInsets.all(24.0),
+                child: CupertinoSearchTextField(
+                  onChanged: (String s) => setState(() {
+                    _searchTerm = s.toUpperCase();
+                  }),
+                ),
+              ),
               buildUserClasses(context),
               buildPresetClasses(context),
               buildCreateClassButton(context),
@@ -99,7 +107,11 @@ class _ClassPickerPageState extends State<ClassPickerPage> {
     );
   }
 
-  CupertinoListSection buildUserClasses(BuildContext context) {
+  Widget buildUserClasses(BuildContext context) {
+    var classes =
+        _userClasses.where((c) => c.name.contains(_searchTerm)).toList();
+    classes.sort((a, b) => b.name.compareTo(a.name));
+    if (classes.isEmpty) return Container();
     return CupertinoListSection.insetGrouped(
       header: Padding(
         padding: const EdgeInsets.only(left: 16.0),
@@ -113,9 +125,7 @@ class _ClassPickerPageState extends State<ClassPickerPage> {
         ),
       ),
       children: [
-        // needed because otherwise listsection is temporarily empty
-        if (_userClasses.isEmpty) Container(),
-        for (final c in _userClasses)
+        for (final c in classes)
           Slidable(
             endActionPane: ActionPane(
               motion: const ScrollMotion(),
@@ -136,7 +146,11 @@ class _ClassPickerPageState extends State<ClassPickerPage> {
     );
   }
 
-  CupertinoListSection buildPresetClasses(BuildContext context) {
+  Widget buildPresetClasses(BuildContext context) {
+    var classes =
+        _allClassMetaModels.where((c) => c.name.contains(_searchTerm)).toList();
+    classes.sort((a, b) => b.name.compareTo(a.name));
+    if (classes.isEmpty) return Container();
     return CupertinoListSection.insetGrouped(
       header: Padding(
         padding: const EdgeInsets.only(left: 16.0),
@@ -150,9 +164,7 @@ class _ClassPickerPageState extends State<ClassPickerPage> {
         ),
       ),
       children: [
-        // needed because otherwise listsection is temporarily empty
-        if (_allClassMetaModels.isEmpty) Container(),
-        for (final m in _allClassMetaModels)
+        for (final m in classes)
           CupertinoListTile.notched(
             onTap: () => onSelectNewClass(m),
             title: Text(m.name),
@@ -168,7 +180,7 @@ class _ClassPickerPageState extends State<ClassPickerPage> {
     );
   }
 
-  CupertinoListSection buildCreateClassButton(BuildContext context) {
+  Widget buildCreateClassButton(BuildContext context) {
     return CupertinoListSection.insetGrouped(
       header: Padding(
         padding: const EdgeInsets.only(left: 16.0),

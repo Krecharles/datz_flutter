@@ -61,8 +61,8 @@ class DataLoader {
       print("Loading all classes metadata");
     }
     try {
-      final String response = await rootBundle
-          .loadString('assets/class_meta_data/classiqueClasses.json');
+      final String response =
+          await rootBundle.loadString('assets/class_meta_data/allClasses.json');
       List<ClassMetaModel> allClassMetaModels = [];
       final List<dynamic> data = await json.decode(response);
       for (Map<String, dynamic> classData in data) {

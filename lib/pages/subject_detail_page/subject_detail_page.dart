@@ -1,8 +1,8 @@
-import 'package:datz_flutter/components/bonus_stepper_tile.dart';
 import 'package:datz_flutter/components/buttons.dart';
 import 'package:datz_flutter/consts.dart';
 import 'package:datz_flutter/model/test_model.dart';
 import 'package:datz_flutter/pages/edit_test_page.dart';
+import 'package:datz_flutter/pages/subject_detail_page/bonus_stepper_tile.dart';
 import 'package:datz_flutter/providers/class_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -84,11 +84,23 @@ class SubjectDetailPage extends StatelessWidget {
   }
 
   Widget buildBody(BuildContext context) {
+    final provider = context.watch<ClassProvider>();
     return Column(
       children: [
         buildSubjectInfoCard(context),
         const BonusStepperTile(),
-        buildTestList(context),
+        buildTestList(
+          context,
+          provider.getSelectedSubject()?.simpleTests,
+          "Tests",
+          buildTestTile,
+        ),
+        buildTestList(
+          context,
+          provider.getSelectedSubject()?.fixedContributionTests,
+          "Fixed Contribution Tests",
+          buildTestTile,
+        ),
         const SizedBox(height: 32),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -121,15 +133,26 @@ class SubjectDetailPage extends StatelessWidget {
     });
   }
 
-  Widget buildTestList(BuildContext context) {
+  Widget buildTestList(BuildContext context, List<Test>? tests, String header,
+      Widget Function(BuildContext, Test) buildTile) {
     ClassProvider provider = context.watch<ClassProvider>();
-    final tests = provider.getSelectedSubject()?.tests;
     if (tests == null || tests.isEmpty) {
       return Container();
     }
     return CupertinoListSection.insetGrouped(
+      header: Padding(
+        padding: const EdgeInsets.only(left: 16.0),
+        child: Text(
+          header,
+          style: TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.w400,
+            color: CupertinoColors.secondaryLabel.resolveFrom(context),
+          ),
+        ),
+      ),
       children: [
-        for (Test t in provider.getSelectedSubject()!.tests)
+        for (Test t in tests)
           Slidable(
             endActionPane: ActionPane(
               motion: const ScrollMotion(),
@@ -159,14 +182,18 @@ class SubjectDetailPage extends StatelessWidget {
                 ),
               ],
             ),
-            child: buildTestTile(context, t, provider),
+            child: buildTile(context, t),
           ),
       ],
     );
   }
 
-  CupertinoListTile buildTestTile(
-      BuildContext context, Test t, ClassProvider provider) {
+  Widget buildTestTile(BuildContext context, Test t) {
+    final provider = context.watch<ClassProvider>();
+    String title = t.name;
+    if (t is FixedContributionTest) {
+      title += "  -  ${t.getContributionFractionString()}";
+    }
     return CupertinoListTile.notched(
       onTap: () {
         Navigator.push(
@@ -179,7 +206,7 @@ class SubjectDetailPage extends StatelessWidget {
           ),
         );
       },
-      title: Text(t.name),
+      title: Text(title),
       trailing: Row(
         children: [
           Text(

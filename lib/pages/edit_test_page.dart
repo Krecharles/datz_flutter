@@ -24,16 +24,25 @@ class _TestEditPageState extends State<TestEditPage> {
   TextEditingController _nameController = TextEditingController();
   TextEditingController _gradeController = TextEditingController();
   TextEditingController _maxGradeController = TextEditingController();
+  TextEditingController _fixedContribTestController = TextEditingController();
+  bool _moreOptions = false;
 
   @override
   void initState() {
     super.initState();
+
     _nameController =
         TextEditingController(text: widget.editTest?.name ?? "Test");
     _gradeController =
         TextEditingController(text: widget.editTest?.grade.toString());
     _maxGradeController =
         TextEditingController(text: "${widget.editTest?.maxGrade ?? 60}");
+    final test = widget.editTest;
+    if (test is FixedContributionTest) {
+      _moreOptions = true;
+      _fixedContribTestController =
+          TextEditingController(text: test.getContributionFractionString());
+    }
   }
 
   void onSubmit() {
@@ -46,14 +55,48 @@ class _TestEditPageState extends State<TestEditPage> {
     if (double.tryParse(_maxGradeController.value.text) == null) {
       return alertError(context, "Max Grade must be a Number");
     }
-    Test newTest = Test(
-      id: widget.editTest?.id,
-      name: _nameController.value.text,
-      grade: double.parse(_gradeController.value.text),
-      maxGrade: double.parse(_maxGradeController.value.text),
-    );
-    widget.onSubmit(newTest);
-    Navigator.pop(context);
+
+    if (!_moreOptions) {
+      Test newTest = Test(
+        id: widget.editTest?.id,
+        name: _nameController.value.text,
+        grade: double.parse(_gradeController.value.text),
+        maxGrade: double.parse(_maxGradeController.value.text),
+      );
+      widget.onSubmit(newTest);
+      Navigator.pop(context);
+      return;
+    }
+
+    try {
+      print("try to make fixedcontrib");
+      final vals = FixedContributionTest.parseStringToFraction(
+          _fixedContribTestController.value.text);
+      final top = vals[0];
+      final bottom = vals[1];
+      if (top <= 0 ||
+          bottom <= 0 ||
+          top.toDouble() / bottom.toDouble() <= 0 ||
+          top.toDouble() / bottom.toDouble() >= 1) throw "Invalid Input";
+
+      Test newTest = FixedContributionTest(
+        id: widget.editTest?.id,
+        name: _nameController.value.text,
+        grade: double.parse(_gradeController.value.text),
+        maxGrade: double.parse(_maxGradeController.value.text),
+        contributionFractionTop: vals[0],
+        contributionFractionBottom: vals[1],
+      );
+      widget.onSubmit(newTest);
+      Navigator.pop(context);
+      return;
+    } catch (e) {
+      return alertError(context, e.toString());
+    }
+  }
+
+  bool isHandlingGivenFixedContribTest() {
+    return widget.editTest is FixedContributionTest;
   }
 
   @override
@@ -66,10 +109,16 @@ class _TestEditPageState extends State<TestEditPage> {
         ),
       ),
       child: SingleChildScrollView(
+        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
         child: SafeArea(
           child: Column(
             children: [
               buildInputForm(),
+              const SizedBox(height: 32),
+              // TODO check if this is correct
+              if (widget.editTest == null ||
+                  widget.editTest is FixedContributionTest)
+                buildComplexForm(),
               const SizedBox(height: 32),
               buildSubmitButtonRow(context),
             ],
@@ -90,6 +139,42 @@ class _TestEditPageState extends State<TestEditPage> {
             controller: _gradeController),
         NumberFieldFormRow(
             title: const Text("Max Grade"), controller: _maxGradeController),
+      ],
+    );
+  }
+
+  CupertinoListSection buildComplexForm() {
+    return CupertinoListSection.insetGrouped(
+      footer: _moreOptions
+          ? Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 22.0),
+              child: Text(
+                "This options should be used for orals or TPs that contribute a fixed portion to the average, e.g. 1/2",
+                style: TextStyle(
+                  fontSize: 13,
+                  letterSpacing: -0.08,
+                  fontWeight: FontWeight.w400,
+                  color: CupertinoColors.secondaryLabel
+                      .resolveFrom(context)
+                      .withOpacity(0.6),
+                ),
+              ),
+            )
+          : Container(),
+      children: [
+        BoolFieldFormRow(
+          title: const Text("More Options"),
+          value: _moreOptions,
+          onChanged: (newVal) => setState(() {
+            if (!isHandlingGivenFixedContribTest()) _moreOptions = newVal;
+          }),
+        ),
+        if (_moreOptions)
+          TextFieldFormRow(
+            title: const Text("Fixed Contribution"),
+            placeholder: "1/3",
+            controller: _fixedContribTestController,
+          ),
       ],
     );
   }

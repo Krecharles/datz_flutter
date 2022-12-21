@@ -42,37 +42,10 @@ class ClassCreationModel {
   ClassMetaModel parseToMetaModel() {
     return ClassMetaModel(
       name: nameController.value.text,
-      semesters: parseToSemesterMetaModel(),
+      useSemesters: useSemesters,
+      hasExams: hasExams,
       subjects: parseToSubjectMetaModel(),
     );
-  }
-
-  List<SemesterMetaModel> parseToSemesterMetaModel() {
-    if (useSemesters && !hasExams) {
-      return [
-        SemesterMetaModel(name: "Sem 1", coef: 1),
-        SemesterMetaModel(name: "Sem 2", coef: 1),
-      ];
-    }
-    if (useSemesters && hasExams) {
-      return [
-        SemesterMetaModel(name: "Sem 1", coef: 1),
-        SemesterMetaModel(name: "Sem 2", coef: 1),
-        // exam counts as 2/3
-        SemesterMetaModel(name: "Exam", coef: 4),
-      ];
-    }
-    if (!useSemesters && !hasExams) {
-      return [
-        SemesterMetaModel(name: "Trim 1", coef: 1),
-        SemesterMetaModel(name: "Trim 2", coef: 1),
-        SemesterMetaModel(name: "Trim 3", coef: 1),
-      ];
-    }
-    if (kDebugMode) {
-      print("Invalid semester config in class creation");
-    }
-    throw Error();
   }
 
   List<SubjectMetaModel> parseToSubjectMetaModel() {

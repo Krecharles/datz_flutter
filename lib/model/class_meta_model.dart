@@ -3,12 +3,14 @@ import 'package:flutter/foundation.dart';
 
 class ClassMetaModel {
   late String name;
-  late List<SemesterMetaModel> semesters;
+  late bool useSemesters;
+  late bool hasExams;
   late List<SubjectMetaModel> subjects;
 
   ClassMetaModel({
     required this.name,
-    required this.semesters,
+    required this.useSemesters,
+    required this.hasExams,
     required this.subjects,
   });
 
@@ -17,16 +19,8 @@ class ClassMetaModel {
   ClassMetaModel.fromJson(Map<String, dynamic> json) {
     try {
       name = json["name"];
-      final semestersList = json["semesters"] as List<dynamic>?;
-      if (semestersList == null) {
-        semesters = [
-          SemesterMetaModel(name: "Sem 1", coef: 1),
-          SemesterMetaModel(name: "Sem 2", coef: 1),
-        ];
-      } else {
-        semesters =
-            semestersList.map((s) => SemesterMetaModel.fromJson(s)).toList();
-      }
+      useSemesters = json["useSemesters"] ?? true;
+      hasExams = json["hasExams"] ?? false;
       final subjectsList = json["subjects"] as List<dynamic>;
       subjects = subjectsList.map((s) => SubjectMetaModel.fromJson(s)).toList();
     } catch (e) {

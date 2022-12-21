@@ -3,7 +3,7 @@ import 'package:datz_flutter/components/forms/form_rows.dart';
 import 'package:datz_flutter/model/class_meta_model.dart';
 import 'package:datz_flutter/model/class_model.dart';
 import 'package:datz_flutter/model/data_loader.dart';
-import 'package:datz_flutter/pages/class_edit_page/subject_creation_model.dart';
+import 'package:datz_flutter/pages/class_edit_page/class_creation_model.dart';
 import 'package:datz_flutter/providers/class_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
