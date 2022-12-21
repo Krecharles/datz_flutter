@@ -69,7 +69,6 @@ class _TestEditPageState extends State<TestEditPage> {
     }
 
     try {
-      print("try to make fixedcontrib");
       final vals = FixedContributionTest.parseStringToFraction(
           _fixedContribTestController.value.text);
       final top = vals[0];

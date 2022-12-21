@@ -8,8 +8,22 @@ import 'package:flutter/cupertino.dart';
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
+  // void checkIfClassIsNone(BuildContext context) {
+  //   final provider = context.watch<ClassProvider>();
+  //   if (provider.selectedClass == null) {
+  //     Navigator.push(
+  //       context,
+  //       CupertinoPageRoute(
+  //           builder: (BuildContext context) => const ClassPickerPage()),
+  //     );
+  //   }
+  // }
+
   @override
   Widget build(BuildContext context) {
+    // Future.delayed(
+    //     const Duration(milliseconds: 50), () => checkIfClassIsNone(context));
+
     return CupertinoPageScaffold(
       child: CustomSliver(
         minExtent: 100,
