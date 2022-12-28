@@ -1,58 +1,54 @@
 import 'package:datz_flutter/components/buttons.dart';
 import 'package:datz_flutter/components/forms/form_rows.dart';
 import 'package:datz_flutter/model/class_meta_model.dart';
-import 'package:datz_flutter/model/class_model.dart';
-import 'package:datz_flutter/model/data_loader.dart';
 import 'package:datz_flutter/pages/class_edit_page/class_creation_model.dart';
-import 'package:datz_flutter/providers/class_provider.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:provider/provider.dart';
 
 class ClassEditPage extends StatefulWidget {
-  const ClassEditPage({super.key});
+  final void Function(ClassMetaModel)? onSubmit;
+  late ClassCreationModel classCreationModel = ClassCreationModel(
+    useSemesters: true,
+    hasExams: false,
+  );
+
+  ClassEditPage(
+      {super.key, ClassCreationModel? classCreationModel, this.onSubmit}) {
+    this.classCreationModel = classCreationModel ??
+        ClassCreationModel(
+          useSemesters: true,
+          hasExams: false,
+        );
+  }
 
   @override
   State<ClassEditPage> createState() => _ClassEditPageState();
 }
 
 class _ClassEditPageState extends State<ClassEditPage> {
-  final ClassCreationModel _subjectCreationModel = ClassCreationModel(
-    useSemesters: true,
-    hasExams: false,
-  );
-
   void onSubmit() {
-    String? errorMessage = _subjectCreationModel.validate();
+    String? errorMessage = widget.classCreationModel.validate();
     if (errorMessage != null) {
       return alertError(context, errorMessage);
     }
-    ClassMetaModel metaModel = _subjectCreationModel.parseToMetaModel();
-
-    Class newClass = Class.fromMetaModel(metaModel);
-    DataLoader.addClassId(newClass.id);
-    DataLoader.saveActiveClassId(newClass.id);
-    DataLoader.saveClass(newClass);
-
-    Provider.of<ClassProvider>(context, listen: false).selectClass(newClass);
-    Navigator.pop(context); // pop to class picker
-    Navigator.pop(context); // pop to homepage
+    ClassMetaModel metaModel = widget.classCreationModel.parseToMetaModel();
+    widget.onSubmit?.call(metaModel);
   }
 
   void removeSubject(int subjectId) {
     setState(() {
-      _subjectCreationModel.removeSubject(subjectId);
+      widget.classCreationModel.removeSubject(subjectId);
     });
   }
 
   void addSimpleSubject() {
     setState(() {
-      _subjectCreationModel.addSimpleSubject();
+      widget.classCreationModel.addSimpleSubject();
     });
   }
 
   void addCombiSubject() {
     setState(() {
-      _subjectCreationModel.addCombiSubject();
+      widget.classCreationModel.addCombiSubject();
     });
   }
 
@@ -88,29 +84,29 @@ class _ClassEditPageState extends State<ClassEditPage> {
     return CupertinoListSection.insetGrouped(
       children: [
         TextFieldFormRow(
-          controller: _subjectCreationModel.nameController,
+          controller: widget.classCreationModel.nameController,
           title: const Text("Name"),
           placeholder: "3MB",
         ),
         BoolFieldFormRow(
           title: const Text("Use Semesters"),
-          value: _subjectCreationModel.useSemesters,
+          value: widget.classCreationModel.useSemesters,
           onChanged: (newVal) => setState(() {
-            _subjectCreationModel.useSemesters = newVal;
-            if (!_subjectCreationModel.useSemesters &&
-                _subjectCreationModel.hasExams) {
-              _subjectCreationModel.hasExams = false;
+            widget.classCreationModel.useSemesters = newVal;
+            if (!widget.classCreationModel.useSemesters &&
+                widget.classCreationModel.hasExams) {
+              widget.classCreationModel.hasExams = false;
             }
           }),
         ),
         BoolFieldFormRow(
           title: const Text("Has Exams"),
-          value: _subjectCreationModel.hasExams,
+          value: widget.classCreationModel.hasExams,
           onChanged: (newVal) => setState(() {
-            _subjectCreationModel.hasExams = newVal;
-            if (!_subjectCreationModel.useSemesters &&
-                _subjectCreationModel.hasExams) {
-              _subjectCreationModel.useSemesters = true;
+            widget.classCreationModel.hasExams = newVal;
+            if (!widget.classCreationModel.useSemesters &&
+                widget.classCreationModel.hasExams) {
+              widget.classCreationModel.useSemesters = true;
             }
           }),
         ),
@@ -122,7 +118,7 @@ class _ClassEditPageState extends State<ClassEditPage> {
     return Column(
       children: [
         for (SubjectCreationModel subjectModel
-            in _subjectCreationModel.subjects)
+            in widget.classCreationModel.subjects)
           CupertinoListSection.insetGrouped(children: [
             TextFieldFormRow(
               controller: subjectModel.nameController,

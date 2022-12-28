@@ -61,6 +61,38 @@ class Semester {
         'subjects': subjects.map((s) => s.toJson()).toList(),
       };
 
+  void applyMetaModelChanges(
+    ClassMetaModel classMetaModel,
+    SemesterMetaModel semesterMetaModel,
+  ) {
+    name = semesterMetaModel.name;
+    coef = semesterMetaModel.coef;
+
+    final List<Subject> subjectsTemp = [];
+
+    for (SubjectMetaModel subjectMetaModel in classMetaModel.subjects) {
+      final subjectsWithId = subjects.where((s) => s.id == subjectMetaModel.id);
+
+      if (subjectsWithId.isNotEmpty) {
+        subjectsWithId.first.applyMetaModelChanges(subjectMetaModel);
+        subjectsTemp.add(subjectsWithId.first);
+        continue;
+      }
+
+      if (subjectMetaModel.subSubjects == null ||
+          subjectMetaModel.subSubjects!.isEmpty) {
+        Subject s = SimpleSubject.fromMetaModel(subjectMetaModel);
+        subjectsTemp.add(s);
+        continue;
+      }
+
+      Subject s = CombiSubject.fromMetaModel(subjectMetaModel);
+      subjectsTemp.add(s);
+    }
+
+    subjects = subjectsTemp;
+  }
+
   bool isAvgCalculable() {
     return subjects.any((s) => s.isAvgCalculable());
   }

@@ -82,6 +82,31 @@ class Class {
         'semesters': semesters.map((s) => s.toJson()).toList(),
       };
 
+  void applyMetaModelChanges(ClassMetaModel classMetaModel) {
+    name = classMetaModel.name;
+
+    final List<Semester> semestersTemp = [];
+    final semesterMetaModels = calcSemesterMetaModels(
+        classMetaModel.useSemesters, classMetaModel.hasExams);
+
+    semesterMetaModels.asMap().forEach(
+      (index, semesterMetaModel) {
+        // check if the semester already exists to keep tests in that semester
+        if (index < semesters.length) {
+          semesters[index]
+              .applyMetaModelChanges(classMetaModel, semesterMetaModel);
+          semestersTemp.add(semesters[index]);
+        } else {
+          Semester s =
+              Semester.fromMetaModel(classMetaModel, semesterMetaModel);
+          semestersTemp.add(s);
+        }
+      },
+    );
+
+    semesters = semestersTemp;
+  }
+
   @override
   String toString() => const JsonEncoder.withIndent("  ").convert(toJson());
 

@@ -34,6 +34,7 @@ class SubjectDetailPage extends StatelessWidget {
     const maxExtent = 200;
     // final shrinkRatio = clampDouble(1 - shrinkOffset / maxExtent, 0, 1);
     final opacity = clampDouble(1 - 2 * shrinkOffset / maxExtent, 0, 1);
+    final provider = context.watch<ClassProvider>();
     return Stack(
       fit: StackFit.expand,
       children: [
@@ -53,31 +54,28 @@ class SubjectDetailPage extends StatelessWidget {
           left: 12.0,
           right: 12.0,
           bottom: 12.0 + opacity * 16,
-          child: Consumer<ClassProvider>(builder:
-              (BuildContext context, ClassProvider provider, Widget? child) {
-            return Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.baseline,
-              textBaseline: TextBaseline.alphabetic,
-              children: [
-                Text(
-                  provider.getSelectedSubject()?.name ?? "",
-                  style: TextStyle(
-                    fontSize: (1 - opacity) * 32,
-                    color: CupertinoColors.white.withOpacity(1 - opacity),
-                  ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.baseline,
+            textBaseline: TextBaseline.alphabetic,
+            children: [
+              Text(
+                provider.getSelectedSubject()?.name ?? "",
+                style: TextStyle(
+                  fontSize: (1 - opacity) * 32,
+                  color: CupertinoColors.white.withOpacity(1 - opacity),
                 ),
-                const SizedBox(width: 16),
-                Text(
-                  provider.getSelectedSubject()?.formattedAvg() ?? "",
-                  style: TextStyle(
-                    fontSize: 32 + opacity * 64,
-                    color: CupertinoColors.white,
-                  ),
+              ),
+              const SizedBox(width: 16),
+              Text(
+                provider.getSelectedSubject()?.formattedAvg() ?? "",
+                style: TextStyle(
+                  fontSize: 32 + opacity * 64,
+                  color: CupertinoColors.white,
                 ),
-              ],
-            );
-          }),
+              ),
+            ],
+          ),
         ),
       ],
     );
@@ -105,32 +103,30 @@ class SubjectDetailPage extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            buildAddTestButton(),
+            buildAddTestButton(context),
           ],
         ),
       ],
     );
   }
 
-  Consumer<ClassProvider> buildAddTestButton() {
-    return Consumer<ClassProvider>(
-        builder: (BuildContext context, ClassProvider provider, Widget? child) {
-      return Button(
-        text: "Add Test",
-        type: ButtonType.tinted,
-        leadingIcon: CupertinoIcons.add,
-        onPressed: () {
-          Navigator.push(
-            context,
-            CupertinoPageRoute(
-              builder: (context) => TestEditPage(
-                onSubmit: (Test newTest) => provider.addTest(newTest),
-              ),
+  Widget buildAddTestButton(BuildContext context) {
+    final provider = context.watch<ClassProvider>();
+    return Button(
+      text: "Add Test",
+      type: ButtonType.tinted,
+      leadingIcon: CupertinoIcons.add,
+      onPressed: () {
+        Navigator.push(
+          context,
+          CupertinoPageRoute(
+            builder: (context) => TestEditPage(
+              onSubmit: (Test newTest) => provider.addTest(newTest),
             ),
-          );
-        },
-      );
-    });
+          ),
+        );
+      },
+    );
   }
 
   Widget buildTestList(BuildContext context, List<Test>? tests, String header,
@@ -222,35 +218,33 @@ class SubjectDetailPage extends StatelessWidget {
   }
 
   Widget buildSubjectInfoCard(BuildContext context) {
-    return Consumer<ClassProvider>(
-        builder: (BuildContext context, ClassProvider provider, Widget? child) {
-      return Container(
-        // height: 100,
-        padding: const EdgeInsets.all(24),
-        margin: const EdgeInsets.all(20),
-        decoration: CustomDecorations.primaryContainer(context),
+    final provider = context.watch<ClassProvider>();
+    return Container(
+      // height: 100,
+      padding: const EdgeInsets.all(24),
+      margin: const EdgeInsets.all(20),
+      decoration: CustomDecorations.primaryContainer(context),
 
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Text(
-              provider.getSelectedSubject()?.formattedAvg() ?? "",
-              style: TextStyle(
-                color: CupertinoColors.label.resolveFrom(context),
-                fontSize: 34,
-                fontWeight: FontWeight.w700,
-              ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(
+            provider.getSelectedSubject()?.formattedAvg() ?? "",
+            style: TextStyle(
+              color: CupertinoColors.label.resolveFrom(context),
+              fontSize: 34,
+              fontWeight: FontWeight.w700,
             ),
-            const SizedBox(height: 12),
-            Text(
-              "Coefficient: ${provider.getSelectedSubject()?.coef ?? ""}",
-              style: TextStyle(
-                color: CupertinoColors.secondaryLabel.resolveFrom(context),
-              ),
+          ),
+          const SizedBox(height: 12),
+          Text(
+            "Coefficient: ${provider.getSelectedSubject()?.coef ?? ""}",
+            style: TextStyle(
+              color: CupertinoColors.secondaryLabel.resolveFrom(context),
             ),
-          ],
-        ),
-      );
-    });
+          ),
+        ],
+      ),
+    );
   }
 }

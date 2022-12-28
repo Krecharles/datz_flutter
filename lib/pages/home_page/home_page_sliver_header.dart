@@ -1,4 +1,3 @@
-import 'package:datz_flutter/components/buttons.dart';
 import 'package:datz_flutter/consts.dart';
 import 'package:datz_flutter/pages/credits_page/credits_page.dart';
 import 'package:datz_flutter/providers/class_provider.dart';
@@ -32,37 +31,35 @@ class HomePageSliverHeader extends StatelessWidget {
   }
 
   Widget buildSemesterPicker(BuildContext context, double opacity) {
+    final provider = context.watch<ClassProvider>();
+    if (provider.selectedClass == null) return Container();
+
+    List<String> semesterNames = provider.selectedClass!.getSemesterNames();
+    Map<int, Widget> options = {};
+    for (int i = 0; i < semesterNames.length; i++) {
+      options[i] = Text(
+        semesterNames[i],
+        style: CupertinoTheme.of(context).textTheme.textStyle,
+      );
+    }
+    options[semesterNames.length] = Text(
+      "Total",
+      style: CupertinoTheme.of(context).textTheme.textStyle,
+    );
+
     return Positioned(
       left: 12.0,
       right: 12.0,
       bottom: 12.0 - shrinkOffset / 2,
       child: Opacity(
         opacity: opacity,
-        child: Consumer<ClassProvider>(builder:
-            (BuildContext context, ClassProvider provider, Widget? child) {
-          if (provider.selectedClass == null) return Container();
-
-          List<String> semesterNames =
-              provider.selectedClass!.getSemesterNames();
-          Map<int, Widget> options = {};
-          for (int i = 0; i < semesterNames.length; i++) {
-            options[i] = Text(
-              semesterNames[i],
-              style: CupertinoTheme.of(context).textTheme.textStyle,
-            );
-          }
-          options[semesterNames.length] = Text(
-            "Total",
-            style: CupertinoTheme.of(context).textTheme.textStyle,
-          );
-          return CupertinoSlidingSegmentedControl(
-            groupValue: provider.selectedSemester,
-            children: options,
-            onValueChanged: (int? value) {
-              provider.selectSemester(value ?? 0);
-            },
-          );
-        }),
+        child: CupertinoSlidingSegmentedControl(
+          groupValue: provider.selectedSemester,
+          children: options,
+          onValueChanged: (int? value) {
+            provider.selectSemester(value ?? 0);
+          },
+        ),
       ),
     );
   }

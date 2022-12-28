@@ -16,6 +16,11 @@ class Subject {
   Map<String, dynamic> toJson() =>
       {"some key": "Subject.toJson() should never be called on parent class"};
 
+  void applyMetaModelChanges(SubjectMetaModel subjectMetaModel) {
+    name = subjectMetaModel.name;
+    coef = subjectMetaModel.coef;
+  }
+
   bool isAvgCalculable() {
     return false;
   }
@@ -176,6 +181,40 @@ class CombiSubject extends Subject {
         'coef': coef,
         'subSubjects': subSubjects.map((s) => s.toJson()).toList(),
       };
+
+  @override
+  void applyMetaModelChanges(SubjectMetaModel subjectMetaModel) {
+    super.applyMetaModelChanges(subjectMetaModel);
+
+    if (subjectMetaModel.subSubjects == null) {
+      if (kDebugMode) {
+        print(
+            "Got simple Subject in applyMetaModelChanges for a Combi subject");
+      }
+      return;
+    }
+
+    final List<SimpleSubject> subjectsTemp = [];
+    for (SubjectMetaModel subjectMetaModel in subjectMetaModel.subSubjects!) {
+      final subjectsWithId =
+          subSubjects.where((s) => s.id == subjectMetaModel.id);
+      if (subjectsWithId.isNotEmpty) {
+        subjectsWithId.first.applyMetaModelChanges(subjectMetaModel);
+        subjectsTemp.add(subjectsWithId.first);
+        continue;
+      }
+
+      if (subjectMetaModel.subSubjects != null) {
+        if (kDebugMode) {
+          print("Multiple nested subSubjects not allowed");
+        }
+      } else {
+        subjectsTemp.add(SimpleSubject.fromMetaModel(subjectMetaModel));
+      }
+    }
+
+    subSubjects = subjectsTemp;
+  }
 
   @override
   bool isAvgCalculable() {

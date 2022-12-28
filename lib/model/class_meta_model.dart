@@ -42,8 +42,9 @@ class SubjectMetaModel {
     required this.name,
     required this.coef,
     this.subSubjects,
+    int? id,
   }) {
-    id = randomId();
+    this.id = id ?? randomId();
   }
 
   SubjectMetaModel.fromJson(Map<String, dynamic> json) {

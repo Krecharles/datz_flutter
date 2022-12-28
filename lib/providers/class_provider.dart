@@ -69,6 +69,7 @@ class ClassProvider with ChangeNotifier {
     selectedClass = c;
     selectedSemester = 0;
     selectedSubjectId = null;
+    DataLoader.saveActiveClassId(c.id);
     notifyListeners();
   }
 

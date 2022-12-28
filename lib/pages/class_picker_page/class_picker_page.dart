@@ -176,7 +176,21 @@ class _ClassPickerPageState extends State<ClassPickerPage> {
   onCreateOwnClass(BuildContext context) {
     Navigator.push(
       context,
-      CupertinoPageRoute(builder: (context) => const ClassEditPage()),
+      CupertinoPageRoute(
+        builder: (context) => ClassEditPage(
+          onSubmit: (metaModel) {
+            Class newClass = Class.fromMetaModel(metaModel);
+            DataLoader.addClassId(newClass.id);
+            DataLoader.saveActiveClassId(newClass.id);
+            DataLoader.saveClass(newClass);
+
+            Provider.of<ClassProvider>(context, listen: false)
+                .selectClass(newClass);
+            Navigator.pop(context); // pop to class picker
+            Navigator.pop(context); // pop to homepage
+          },
+        ),
+      ),
     );
   }
 

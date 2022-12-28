@@ -1,19 +1,20 @@
 import 'package:datz_flutter/model/class_meta_model.dart';
 import 'package:datz_flutter/model/class_model.dart';
+import 'package:datz_flutter/model/subject_model.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 
 class ClassCreationModel {
   late TextEditingController nameController;
-  bool useSemesters;
-  bool hasExams;
+  late bool useSemesters;
+  late bool hasExams;
   late List<SubjectCreationModel> subjects;
   ClassCreationModel({
     required this.useSemesters,
     required this.hasExams,
+    List<SubjectCreationModel>? subjects,
   }) {
     nameController = TextEditingController();
-    subjects = [];
+    this.subjects = subjects ?? [];
   }
 
   String? validate() {
@@ -37,6 +38,15 @@ class ClassCreationModel {
       }
     }
     return null;
+  }
+
+  ClassCreationModel.fromClassModel(Class c) {
+    nameController = TextEditingController(text: c.name);
+    useSemesters = c.semesters.first.name.toLowerCase().contains("sem");
+    hasExams = c.semesters.last.name.toLowerCase().contains("ex");
+    subjects = c.semesters.first.subjects
+        .map((s) => SubjectCreationModel.fromSubjectModel(s))
+        .toList();
   }
 
   ClassMetaModel parseToMetaModel() {
@@ -80,16 +90,29 @@ class ClassCreationModel {
 class SubjectCreationModel {
   late int id;
   late TextEditingController nameController;
-  int coef;
+  late int coef;
   List<SubjectCreationModel>? subSubjects;
 
-  SubjectCreationModel(
-      {int? id,
-      TextEditingController? nameController,
-      this.coef = 1,
-      this.subSubjects}) {
+  SubjectCreationModel({
+    int? id,
+    TextEditingController? nameController,
+    this.coef = 1,
+    this.subSubjects,
+  }) {
     this.id = id ?? randomId();
     this.nameController = nameController ?? TextEditingController();
+  }
+
+  SubjectCreationModel.fromSubjectModel(Subject s) {
+    id = s.id;
+    nameController = TextEditingController(text: s.name);
+    coef = s.coef.toInt();
+
+    if (s is CombiSubject) {
+      subSubjects = s.subSubjects
+          .map((s) => SubjectCreationModel.fromSubjectModel(s))
+          .toList();
+    }
   }
 
   SubjectMetaModel parseToSubjectMetaModel() {
@@ -97,6 +120,7 @@ class SubjectCreationModel {
       return SubjectMetaModel(
         name: nameController.value.text,
         coef: coef.toDouble(),
+        id: id,
       );
     } else {
       List<SubjectMetaModel> subSubjectsModels = [];
@@ -104,12 +128,14 @@ class SubjectCreationModel {
         subSubjectsModels.add(SubjectMetaModel(
           name: subModel.nameController.value.text,
           coef: subModel.coef.toDouble(),
+          id: subModel.id,
         ));
       }
       return (SubjectMetaModel(
         name: nameController.value.text,
         coef: coef.toDouble(),
         subSubjects: subSubjectsModels,
+        id: id,
       ));
     }
   }
